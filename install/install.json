@@ -1,0 +1,17 @@
+{
+	"@comment": "Note that the code to transform these data into a webpage is in https://github.com/Schnark/schnark.github.io",
+	"title": {
+		"en": "World Map Skiller – App for Firefox OS",
+		"de": "World Map Skiller – App für Firefox OS"
+	},
+	"serviceworker": false,
+	"icon": "img/WorldMapSkiller-icon-128.png",
+	"screenshots": [
+		"1.png",
+		"2.png"
+	],
+	"desc": {
+		"en": ["Learn the countries of the world with this app! Note: This is a fork with some minor fixes of <a href='https://marketplace.firefox.com/app/world-map-skiller'>World Map Skiller by Valéry Febvre</a>."],
+		"de": ["Lerne die Länder der Erde mit dieser App! Hinweis: Dies ist ein Fork mit einigen kleinen Fehlerbehebungen von <a href='https://marketplace.firefox.com/app/world-map-skiller'>World Map Skiller von Valéry Febvre</a>."]
+	}
+}

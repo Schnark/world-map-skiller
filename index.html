@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+  <title>World Map Skiller</title>
+  <meta name="author" content="Michael M., Valéry Febvre">
+  <meta name="copyright" content="Copyright 2015 Valéry Febvre, 2017 Michael M.">
+
+  <link rel="resource" type="application/l10n" href="locales/locales.ini">
+
+  <link rel="stylesheet" href="lib/bb/style/buttons.css">
+  <link rel="stylesheet" href="lib/bb/style/confirm.css">
+  <link rel="stylesheet" href="lib/bb/style/headers.css">
+  <link rel="stylesheet" href="lib/bb/style/lists.css">
+  <link rel="stylesheet" href="lib/bb/style/toolbars.css">
+
+  <link rel="stylesheet" href="lib/bb/transitions.css">
+  <link rel="stylesheet" href="lib/bb/util.css">
+
+  <link rel="stylesheet" href="lib/icomoon/style.css">
+
+  <link rel="stylesheet" href="lib/world-flags-sprite/stylesheets/flags32.css">
+
+  <link rel="stylesheet" href="lib/animate.css">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script defer src="lib/underscore-min.js"></script>
+  <script defer src="lib/jquery-2.1.3.min.js"></script>
+  <script defer src="lib/rhaboo.min.js"></script>
+  <script defer src="lib/l10n.js"></script>
+
+  <link rel="stylesheet" href="lib/leaflet-0.7.3/leaflet.css">
+  <script>
+    window.L_PREFER_CANVAS = true;
+  </script>
+  <script defer src="lib/leaflet-0.7.3/leaflet.js"></script>
+
+  <script defer src="js/app.js"></script>
+  <script defer src="js/stats.js"></script>
+  <script defer src="js/world-map.js"></script>
+</head>
+<body role="application" class="skin-organic">
+
+  <!--···························· World Map ····························-->
+  <section role="region" id="world-map" data-position="current">
+    <header class="fixed">
+      <button id="about-open" class="icon-info"></button>
+      <menu type="toolbar">
+        <button id="stats-open" class="icon-stats2"></button>
+      </menu>
+      <h1>World Map Skiller</h1>
+    </header>
+
+    <article>
+      <div id="map"></div>
+      <div class="map-box" id="map-box-top"><div></div></div>
+      <div class="map-box" id="map-box-bottom"><div></div></div>
+    </article>
+
+    <div role="toolbar">
+      <button id="btn-start" class="icon-play-arrow"></button>
+      <button id="btn-next" class="icon-navigate-next" style="visibility: hidden"></button>
+      <span></span>
+      <span></span>
+      <button id="btn-reset-map-view" class="icon-open-with"></button>
+    </div>
+  </section>
+
+  <!--···························· Statistics ····························-->
+  <section role="region" id="stats" data-position="right">
+    <header class="fixed">
+      <button id="stats-back" class="icon icon-back"></button>
+      <h1 data-l10n-id="statistics">Statistics</h1>
+    </header>
+
+    <article class="content header scrollable">
+      <header>
+        <h2 data-l10n-id="overall-score">Overall score</h2>
+      </header>
+      <section>
+        <div id="stats-bar">
+          <span>
+            <div class="title" data-l10n-id="best">Best</div>
+            <div id="overall-score-min"></div>
+          </span>
+          <span>
+            <div class="title" data-l10n-id="last">Last</div>
+            <div id="overall-score-last"></div>
+          </span>
+          <span>
+            <div class="title" data-l10n-id="average">Avg.</div>
+            <div id="overall-score-avg"></div>
+          </span>
+        </div>
+
+        <div id="stats-bar-help">
+          <p data-l10n-id="best-help"></p>
+          <p data-l10n-id="last-help"></p>
+          <p data-l10n-id="average-help"></p>
+        </div>
+      </section>
+
+      <header id="stats-list-header">
+        <h2 data-l10n-id="scores-by-country">Scores by country</h2>
+      </header>
+      <section data-type="list">
+        <ul id="stats-list"></ul>
+      </section>
+
+      <section>
+        <p>
+          <button id="stats-clear" class="button" type="button" data-l10n-id="clear-scores">Clear scores</button>
+        </p>
+      </section>
+    </article>
+
+    <form id="stats-clear-dialog" role="dialog" data-type="confirm" class="hide">
+      <section>
+        <h1 data-l10n-id="clear-scores">Clear scores</h1>
+        <p data-l10n-id="clear-scores-are-you-sure">Are you sure to clear your scores?</p>
+      </section>
+      <menu>
+        <button id="stats-clear-cancel" class="button" data-l10n-id="cancel">Cancel</button>
+        <button id="stats-clear-validate" class="button danger" data-l10n-id="ok">OK</button>
+      </menu>
+    </form>
+  </section>
+
+  <!--···························· About ····························-->
+  <section id="about" role="region" data-position="left">
+    <form role="dialog" data-type="confirm">
+      <section>
+        <h1 data-l10n-id="description">Description</h1>
+        <p>
+          <span data-l10n-id="description-info-1">Geography app to learn world countries in a fun way.</span><br>
+          <span><strong data-l10n-id="description-info-2">Your mission, should you decide to accept it, is to validate all countries.</strong></span><br>
+          <span><strong data-l10n-id="description-info-3">A country is validated as soon as you found it two times in only one try.</strong></span>
+        </p>
+
+        <h1 data-l10n-id="version">Version</h1>
+        <p>
+          <span>2.0</span>
+        </p>
+
+        <h1 data-l10n-id="license">License</h1>
+        <p>
+          <span>GNU Affero GPL v3.0</span>
+        </p>
+
+        <h1 data-l10n-id="author">Authors</h1>
+        <p>
+          <span>Michael M., Valéry Febvre</span>
+        </p>
+
+        <ul>
+          <li>
+            <i class="icon-bug"></i>
+            <a href="https://github.com/Schnark/world-map-skiller/issues" target="_blank" rel="noopener" data-l10n-id="report-bug">Report a bug</a>
+          </li>
+          <li>
+            <i class="icon-embed2"></i>
+            <a href="https://github.com/Schnark/world-map-skiller" target="_blank" rel="noopener" data-l10n-id="source">Source code</a>
+          </li>
+        </ul>
+      </section>
+      <menu>
+        <button id="about-close" class="button" type="button" data-l10n-id="close">Close</button>
+      </menu>
+    </form>
+  </section>
+
+  <div id="splash-message"><span></span></div>
+</body>
+</html>
