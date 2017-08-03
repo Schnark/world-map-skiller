@@ -242,7 +242,7 @@ function WorldMap() {
         var message;
         var validated;
 
-        if (highlightedCountryLayer && highlightedCountryLayer.feature.properties.name === e.target.feature.properties.name) {
+        if (highlightedCountryLayer && highlightedCountryLayer.feature.properties.gu_a3 === e.target.feature.properties.gu_a3) {
             return;
         }
 

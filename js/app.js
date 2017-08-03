@@ -66,7 +66,7 @@ var App = {
         App.showSplashMessage(navigator.mozL10n.get('loading'), 'none');
 
         // load countries GeoJSON data and start app
-        $.getJSON('data/ne_110m_admin_0_countries.geo.json', function(data) {
+        $.getJSON('data/geo.json', function(data) {
             App.countries = data.features;
 
             navigator.mozL10n.once(function() {
@@ -84,21 +84,18 @@ var App = {
         var continent = navigator.mozL10n.get(properties.continent.replace(/ /g, '').replace(/\./g, ''));
         var subregion = navigator.mozL10n.get(properties.subregion.replace(/ /g, '').replace(/\./g, ''));
 
-        if ($.inArray(properties.name, ['Kosovo', 'N. Cyprus', 'Somaliland']) >= 0) {
-             flag = '_' + properties.name.replace(/N\. /, 'Northern_');
+        if ($.inArray(properties.name_long, ['Kosovo', 'Northern Cyprus', 'Somaliland']) >= 0) {
+             flag = '_' + properties.name_long.replace(/ /, '_');
         }
-        else if (properties.iso_a2 != -99) {
+        else {
             flag = properties.iso_a2.toLowerCase();
-        }
-        else if (properties.postal != -99) {
-            flag = properties.postal.toLowerCase();
         }
 
         return {
             code: properties.gu_a3,
             name: name,
             continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
-            population: ((properties.pop_est + 99) / 1000000).toFixed(1), // add 99 as -99 is used as "unknown"
+            population: (properties.pop_est / 1000000).toFixed(1),
             flag: flag
         };
 
