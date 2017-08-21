@@ -59,6 +59,10 @@ var App = {
         if (!App.store.stats) {
             App.store.write('stats', {});
         }
+        else {
+            App.store.stats.erase('ATF');
+            App.store.stats.erase('FLK');
+        }
 
         // init map overlay: set line-height CSS property
         App.$splashMessage.css('line-height', (window.innerHeight - 95) + 'px');
