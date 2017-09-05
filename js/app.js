@@ -59,10 +59,6 @@ var App = {
         if (!App.store.stats) {
             App.store.write('stats', {});
         }
-        else {
-            App.store.stats.erase('ATF');
-            App.store.stats.erase('FLK');
-        }
 
         // init map overlay: set line-height CSS property
         App.$splashMessage.css('line-height', (window.innerHeight - 95) + 'px');
@@ -84,7 +80,10 @@ var App = {
 
     getCountryInfo: function(properties) {
         var flag;
-        var name = navigator.mozL10n.get(properties.name_long.replace(/ /g, '').replace(/\./g, '').replace(/'/g, ''));
+        var id = properties.name_long.replace(/ /g, '').replace(/\./g, '').replace(/'/g, '');
+        var name = navigator.mozL10n.get(id);
+        var isVariant = navigator.mozL10n.get(id + '-is');
+        var grammarVariant = navigator.mozL10n.get(id + '-grammar');
         var continent = navigator.mozL10n.get(properties.continent.replace(/ /g, '').replace(/\./g, ''));
         var subregion = navigator.mozL10n.get(properties.subregion.replace(/ /g, '').replace(/\./g, ''));
 
@@ -98,6 +97,8 @@ var App = {
         return {
             code: properties.gu_a3,
             name: name,
+            isVariant: isVariant,
+            grammarVariant: grammarVariant,
             continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
             population: (properties.pop_est / 1000000).toFixed(1),
             flag: flag

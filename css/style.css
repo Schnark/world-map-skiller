@@ -324,50 +324,50 @@ section[data-type="list"] aside.pack-end span {
 
 #static-map-as {
 	position: absolute;
-	top: 50%;
+	top: 49.5%;
 	left: 57%;
 }
 
 #static-map-ck {
 	position: absolute;
-	top: 56%;
+	top: 57%;
 	left: 60%;
 }
 
 #static-map-fm {
 	position: absolute;
-	top: 25%;
+	top: 26%;
 	left: 20%;
 }
 
 #static-map-gu {
 	position: absolute;
 	top: 12%;
-	left: 12%;
+	right: 75%;
 }
 
 #static-map-ki {
 	position: absolute;
-	top: 39%;
+	top: 38.6%;
 	left: 57%;
 }
 
 #static-map-mh {
 	position: absolute;
 	top: 15%;
-	left: 35%;
+	left: 32.5%;
 }
 
 #static-map-nr {
 	position: absolute;
-	top: 35%;
+	top: 34%;
 	left: 30%;
 }
 
 #static-map-nu {
 	position: absolute;
-	top: 62%;
-	left: 55%;
+	top: 65%;
+	left: 54.5%;
 }
 
 #static-map-pf {
@@ -379,13 +379,13 @@ section[data-type="list"] aside.pack-end span {
 #static-map-pw {
 	position: absolute;
 	top: 22%;
-	left: 5%;
+	left: 4%;
 }
 
 #static-map-to {
 	position: absolute;
-	top: 65%;
-	left: 42%;
+	top: 60%;
+	right: 46%;
 }
 
 #static-map-tv {
@@ -396,6 +396,6 @@ section[data-type="list"] aside.pack-end span {
 
 #static-map-ws {
 	position: absolute;
-	top: 50%;
+	top: 49.5%;
 	left: 42%;
 }

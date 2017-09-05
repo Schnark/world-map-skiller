@@ -116,6 +116,14 @@ function WorldMap() {
         resetMapView();
     }
 
+    function formatIs(data) {
+        var msg = 'is';
+        if (data.isVariant) {
+            msg += '-v' + data.isVariant;
+        }
+        return navigator.mozL10n.get(msg, {name: data.grammarVariant || data.name});
+    }
+
     function checkAnswer(layer) {
         var min;
         var distance;
@@ -168,7 +176,7 @@ function WorldMap() {
         question.tries = 0;
 
         message = '<span class="f32"><span class="flag ' + question.flag + '"></span></span>';
-        message += '<p>' + navigator.mozL10n.get('where-is-country', {country: question.name}) + '<br>';
+        message += '<p>' + navigator.mozL10n.get('where-is-country', {is: formatIs(question)}) + '<br>';
         message += question.continent + ' (' + navigator.mozL10n.get('nb-people', {population: question.population}) + ')</p>';
 
         showMapBoxTop(message);
@@ -291,7 +299,7 @@ function WorldMap() {
             else {
                 message = navigator.mozL10n.get('answer-wrong-1-far', {distance: result.distance});
             }
-            message += ' ' + navigator.mozL10n.get('answer-wrong-2', {name: info.name});
+            message += ' ' + navigator.mozL10n.get('answer-wrong-2', {is: formatIs(info)});
             showMapBoxBottom(message, 'wrong');
         }
     }
