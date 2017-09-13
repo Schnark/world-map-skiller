@@ -88,12 +88,12 @@ function Stats() {
 
     function close() {
         $('#stats').attr('class', 'currentToRight');
-        $('#world-map').attr('class', 'leftToCurrent');        
+        $('#world-map').attr('class', 'leftToCurrent');
     }
 
     function isCountryValidated(code) {
         if (App.store.stats[code]) {
-            return _.filter(App.store.stats[code], function(score) {return score === 1;}).length >= 2;
+            return $.grep(App.store.stats[code], function(score) {return score === 1;}).length >= 2;
         }
         else {
             return false;
@@ -104,45 +104,46 @@ function Stats() {
         $('#world-map').attr('class', 'currentToLeft');
         $('#stats').attr('class', 'rightToCurrent');
     }
-    
+
     function refresh() {
         var overallScoreAvg = 0, overallScoreMin = 0, overallScoreLast = 0;
         var validatedCounter = 0;
-        var statsSize = _.size(App.store.stats);
+        var statsSize = 0;
 
+        $.each(App.store.stats, function(code, scores) {
+            var html;
+            var scoreAvg, scoreMin, scoreMax, scoreLast;
+            var validated = isCountryValidated(code);
+
+            scoreAvg = scores.reduce(function(sum, v) { return sum + v; }, 0) / scores.length;
+            scoreMin = Math.min.apply(Math, scores);
+            scoreMax = Math.max.apply(Math, scores);
+            scoreLast = scores[scores.length - 1];
+            overallScoreAvg += scoreAvg;
+            overallScoreMin += scoreMin;
+            overallScoreLast += scoreLast;
+            statsSize += 1;
+
+            if (validated) {
+                validatedCounter += 1;
+                html = '<span class="icon-checkmark"></span>';
+            }
+            else {
+                html  = '<p>' + document.webL10n.get('score-best', {value: scoreMin ? scoreMin : '-'}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-last', {value: scoreLast ? scoreLast : '-'}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-worst', {value: scoreMax ? scoreMax : '-'}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-average', {value: scoreAvg ? scoreAvg.toFixed(1) : '-'}) + '</p>';
+            }
+            $('#score-' + code + ' .pack-end', $page).html(html);
+        });
         if (statsSize) {
-            $.each(App.store.stats, function(code, scores) {
-                var html;
-                var scoreAvg, scoreMin, scoreMax, scoreLast;
-                var validated = isCountryValidated(code);
-
-                scoreAvg = scores.reduce(function(sum, v) { return sum + v; }, 0) / scores.length;
-                scoreMin = _.min(scores);
-                scoreMax = _.max(scores);
-                scoreLast = _.last(scores);
-                overallScoreAvg += scoreAvg;
-                overallScoreMin += scoreMin;
-                overallScoreLast += scoreLast;
-
-                if (validated) {
-                    validatedCounter += 1;
-                    html = '<span class="icon-checkmark"></span>';
-                }
-                else {
-                    html  = '<p>' + navigator.mozL10n.get('score-best', {value: scoreMin ? scoreMin : '-'}) + '</p>';
-                    html += '<p>' + navigator.mozL10n.get('score-last', {value: scoreLast ? scoreLast : '-'}) + '</p>';
-                    html += '<p>' + navigator.mozL10n.get('score-worst', {value: scoreMax ? scoreMax : '-'}) + '</p>';
-                    html += '<p>' + navigator.mozL10n.get('score-average', {value: scoreAvg ? scoreAvg.toFixed(1) : '-'}) + '</p>';
-                }
-                $('#score-' + code + ' .pack-end', $page).html(html);
-            });
             overallScoreAvg = (overallScoreAvg / statsSize).toFixed(1);
             overallScoreMin = (overallScoreMin / statsSize).toFixed(1);
             overallScoreLast = (overallScoreLast / statsSize).toFixed(1);
         }
 
         $('#stats-list-header h2', $page).html(
-            navigator.mozL10n.get('scores-by-country', {nb: validatedCounter, total: App.countries.length})
+            document.webL10n.get('scores-by-country', {nb: validatedCounter, total: App.countries.length})
         );
         $('#overall-score-avg', $page).html(overallScoreAvg ? overallScoreAvg : '-');
         $('#overall-score-min', $page).html(overallScoreMin ? overallScoreMin : '-');

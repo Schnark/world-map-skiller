@@ -217,8 +217,8 @@ section[data-type="list"] aside.pack-end span {
     bottom: 0;
     left: 0;
     right: 0;
-    transform: translateX(100%);
     -webkit-transform: translateX(100%);
+    transform: translateX(100%);
 }
 
 [data-position="left"] {
@@ -227,33 +227,33 @@ section[data-type="list"] aside.pack-end span {
     bottom: 0;
     left: 0;
     right: 0;
-    transform: translateX(-100%);
     -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
 }
 
 .leftToCurrent {
-    animation: leftToCurrent 0.4s forwards;
     -webkit-animation: leftToCurrent 0.4s forwards;
+    animation: leftToCurrent 0.4s forwards;
 }
 .currentToLeft {
+    -webkit-animation: currentToLeft 0.4s forwards;
     animation: currentToLeft 0.4s forwards;
-    -webkit-animation: leftToCurrent 0.4s forwards;
 }
 .rightToCurrent {
+    -webkit-animation: rightToCurrent 0.4s forwards;
     animation: rightToCurrent 0.4s forwards;
-    -webkit-animation: leftToCurrent 0.4s forwards;
 }
 .currentToRight {
+    -webkit-animation: currentToRight 0.4s forwards;
     animation: currentToRight 0.4s forwards;
-    -webkit-animation: leftToCurrent 0.4s forwards;
 }
 .show {
-    animation: show 0.4s forwards;
     -webkit-animation: show 0.4s forwards;
+    animation: show 0.4s forwards;
 }
 .hide {
-    animation: hide 0.4s forwards;
     -webkit-animation: hide 0.4s forwards;
+    animation: hide 0.4s forwards;
 }
 
 /* Static maps */

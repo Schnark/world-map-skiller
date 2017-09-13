@@ -63,29 +63,25 @@ var App = {
         // init map overlay: set line-height CSS property
         App.$splashMessage.css('line-height', (window.innerHeight - 95) + 'px');
 
-        App.showSplashMessage(navigator.mozL10n.get('loading'), 'none');
+        App.showSplashMessage(document.webL10n.get('loading'), 'none');
 
         // load countries GeoJSON data and start app
         $.getJSON('data/geo.json', function(data) {
             App.countries = data.features;
-
-            navigator.mozL10n.once(function() {
-                App.worldMap = new WorldMap();
-                App.stats = new Stats();
-
-                App.hideSplashMessage();
-            });
+            App.worldMap = new WorldMap();
+            App.stats = new Stats();
+            App.hideSplashMessage();
         });
     },
 
     getCountryInfo: function(properties) {
         var flag;
         var id = properties.name_long.replace(/ /g, '').replace(/\./g, '').replace(/'/g, '');
-        var name = navigator.mozL10n.get(id);
-        var isVariant = navigator.mozL10n.get(id + '-is');
-        var grammarVariant = navigator.mozL10n.get(id + '-grammar');
-        var continent = navigator.mozL10n.get(properties.continent.replace(/ /g, '').replace(/\./g, ''));
-        var subregion = navigator.mozL10n.get(properties.subregion.replace(/ /g, '').replace(/\./g, ''));
+        var name = document.webL10n.get(id);
+        var isVariant = document.webL10n.get(id + '-is', {}, 'x');
+        var grammarVariant = document.webL10n.get(id + '-grammar', {}, 'x');
+        var continent = document.webL10n.get(properties.continent.replace(/ /g, '').replace(/\./g, ''));
+        var subregion = document.webL10n.get(properties.subregion.replace(/ /g, '').replace(/\./g, ''));
 
         if ($.inArray(properties.name_long, ['Kosovo', 'Northern Cyprus', 'Somaliland']) >= 0) {
              flag = '_' + properties.name_long.replace(/ /, '_');
@@ -97,8 +93,8 @@ var App = {
         return {
             code: properties.gu_a3,
             name: name,
-            isVariant: isVariant,
-            grammarVariant: grammarVariant,
+            isVariant: isVariant === 'x' ? '' : isVariant,
+            grammarVariant: grammarVariant === 'x' ? '' : grammarVariant,
             continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
             population: (properties.pop_est / 1000000).toFixed(1),
             flag: flag
@@ -136,4 +132,4 @@ var App = {
     }
 };
 
-window.addEventListener('load', App.start, false);
+window.addEventListener('localized', App.start, false);

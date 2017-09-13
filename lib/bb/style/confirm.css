@@ -1,3 +1,4 @@
+/* Minor fixes (2017-09-12) */
 /* ----------------------------------
  * Confirm
  * ---------------------------------- */
@@ -35,9 +36,10 @@ form[role="dialog"][data-type="confirm"] > section {
   color: #FAFAFA;
   padding: 0 1.5rem;
   -moz-box-sizing: padding-box;
+  box-sizing: border-box; /*added*/
   width: 100%;
   display: inline-block;
-  overflow-y: scroll;
+  overflow-y: auto; /*was: scroll*/
   max-height: 100%;
   vertical-align: middle;
   white-space: normal;
@@ -80,6 +82,7 @@ form[role="dialog"][data-type="confirm"] menu button {
   margin: 0 0 1rem;
   padding: 0 1.2rem;
   -moz-box-sizing: border-box;
+  box-sizing: border-box; /*added*/
   display: inline-block;
   vertical-align: middle;
   text-overflow: ellipsis;

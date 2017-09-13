@@ -4,6 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
   <title>World Map Skiller</title>
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+<link rel="manifest" href="icons/manifest.json">
+<link rel="shortcut icon" href="icons/favicon.ico">
+<meta name="msapplication-config" content="icons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+<script>
+if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installPackage)) {
+	navigator.serviceWorker.register('sw.js');
+}
+</script>
+
   <meta name="author" content="Michael M., Valéry Febvre">
   <meta name="copyright" content="Copyright 2015 Valéry Febvre, 2017 Michael M.">
 
@@ -26,7 +39,6 @@
 
   <link rel="stylesheet" href="css/style.css">
 
-  <script defer src="lib/underscore-min.js"></script>
   <script defer src="lib/jquery-2.1.3.min.js"></script>
   <script defer src="lib/rhaboo.min.js"></script>
   <script defer src="lib/l10n.js"></script>
@@ -141,15 +153,16 @@
 
         <h1 data-l10n-id="maps">Maps</h1>
         <p>
-          <span data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following two maps of Europa and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</span>
-          <div class="static-map-wrapper"><div id="static-map-europa" class="static-map">
+          <span><strong data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following two maps of Europa and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</strong></span>
+        </p>
+        <div class="static-map-wrapper"><div id="static-map-europa" class="static-map">
           <img src="data/europa.svg">
           <div id="static-map-li"><span class="f32"><span class="flag li"></span></span><p><b data-l10n-id="Liechtenstein">Liechtenstein</b></p></div>
           <div id="static-map-mc"><span class="f32"><span class="flag mc"></span></span><p><b data-l10n-id="Monaco">Monaco</b></p></div>
           <div id="static-map-sm"><span class="f32"><span class="flag sm"></span></span><p><b data-l10n-id="SanMarino">San Marino</b></p></div>
           <div id="static-map-va"><span class="f32"><span class="flag va"></span></span><p><b data-l10n-id="VaticanCity">Vatican City</b></p></div>
-          </div></div>
-          <div class="static-map-wrapper"><div id="static-map-oceania" class="static-map">
+        </div></div>
+        <div class="static-map-wrapper"><div id="static-map-oceania" class="static-map">
           <img src="data/oceania.svg">
           <div id="static-map-as"><span class="f32"><span class="flag as"></span></span><p data-l10n-id="AmericanSamoa">American Samoa (USA)</p></div>
           <div id="static-map-ck"><span class="f32"><span class="flag ck"></span></span><p><b data-l10n-id="CookIslands">Cook Islands</b></p></div>
@@ -164,12 +177,11 @@
           <div id="static-map-to"><span class="f32"><span class="flag to"></span></span><p><b data-l10n-id="Tonga">Tonga</b></p></div>
           <div id="static-map-tv"><span class="f32"><span class="flag tv"></span></span><p><b data-l10n-id="Tuvalu">Tuvalu</b></p></div>
           <div id="static-map-ws"><span class="f32"><span class="flag ws"></span></span><p><b data-l10n-id="WesternSamoa">Western Samoa</b></p></div>
-          </div></div>
-        </p>
+        </div></div>
 
         <h1 data-l10n-id="version">Version</h1>
         <p>
-          <span>2.3</span>
+          <span>2.4</span>
         </p>
 
         <h1 data-l10n-id="license">License</h1>

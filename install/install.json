@@ -4,7 +4,7 @@
 		"en": "World Map Skiller – App for Firefox OS",
 		"de": "World Map Skiller – App für Firefox OS"
 	},
-	"serviceworker": false,
+	"serviceworker": true,
 	"icon": "img/WorldMapSkiller-icon-128.png",
 	"screenshots": [
 		"1.png",

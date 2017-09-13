@@ -121,7 +121,7 @@ function WorldMap() {
         if (data.isVariant) {
             msg += '-v' + data.isVariant;
         }
-        return navigator.mozL10n.get(msg, {name: data.grammarVariant || data.name});
+        return document.webL10n.get(msg, {name: data.grammarVariant || data.name});
     }
 
     function checkAnswer(layer) {
@@ -176,8 +176,8 @@ function WorldMap() {
         question.tries = 0;
 
         message = '<span class="f32"><span class="flag ' + question.flag + '"></span></span>';
-        message += '<p>' + navigator.mozL10n.get('where-is-country', {is: formatIs(question)}) + '<br>';
-        message += question.continent + ' (' + navigator.mozL10n.get('nb-people', {population: question.population}) + ')</p>';
+        message += '<p>' + document.webL10n.get('where-is-country', {is: formatIs(question)}) + '<br>';
+        message += question.continent + ' (' + document.webL10n.get('nb-people', {population: question.population}) + ')</p>';
 
         showMapBoxTop(message);
         hideMapBoxBottom();
@@ -188,7 +188,7 @@ function WorldMap() {
         if (drawPile && drawPile.length === 0) {
             startOrStop();
 
-            message = navigator.mozL10n.get('end-of-countries', {icon: '<span class="icon-play-arrow"></span>'});
+            message = document.webL10n.get('end-of-countries', {icon: '<span class="icon-play-arrow"></span>'});
             showMapBoxTop(message);
 
             return true;
@@ -202,9 +202,9 @@ function WorldMap() {
         if (validatedCounter === App.countries.length) {
             startOrStop();
 
-            message = '<p>' + navigator.mozL10n.get('end-of-mission-1') + '</p>';
-            message += '<p>' + navigator.mozL10n.get('end-of-mission-2') + '</p>';
-            message += '<p>' + navigator.mozL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
+            message = '<p>' + document.webL10n.get('end-of-mission-1') + '</p>';
+            message += '<p>' + document.webL10n.get('end-of-mission-2') + '</p>';
+            message += '<p>' + document.webL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
             showMapBoxTop(message);
 
             return true;
@@ -267,7 +267,7 @@ function WorldMap() {
         if (!started) {
             message = '<span class="f32"><span class="flag ' + info.flag + '"></span></span>';
             message += '<p><b>' + info.name + '</b><br>';
-            message += info.continent + ' (' + navigator.mozL10n.get('nb-people', {population: info.population}) + ')</p>';
+            message += info.continent + ' (' + document.webL10n.get('nb-people', {population: info.population}) + ')</p>';
 
             showMapBoxTop(message);
             return;
@@ -279,27 +279,27 @@ function WorldMap() {
             App.stats.addCountryScore(question.code, question.tries);
             validated = App.stats.isCountryValidated(question.code);
 
-            message = navigator.mozL10n.get('answer-right', {tries: question.tries});
+            message = document.webL10n.get('answer-right', {tries: question.tries});
             if (validated) {
                 validatedCounter += 1;
                 message += ' <span class="badge">';
                 message += '<span class="icon-checkmark"></span> ';
-                message += navigator.mozL10n.get('validated');
+                message += document.webL10n.get('validated');
                 message += '</span>';
             }
             showMapBoxBottom(message);
 
-            message = navigator.mozL10n.get(validated ? 'answer-right-splash-validated' : 'answer-right-splash');
+            message = document.webL10n.get(validated ? 'answer-right-splash-validated' : 'answer-right-splash');
             App.showSplashMessage(message, null, drawQuestion);
         }
         else {
             if (result.distance <= 100) {
-                message = navigator.mozL10n.get('answer-wrong-1-close');
+                message = document.webL10n.get('answer-wrong-1-close');
             }
             else {
-                message = navigator.mozL10n.get('answer-wrong-1-far', {distance: result.distance});
+                message = document.webL10n.get('answer-wrong-1-far', {distance: result.distance});
             }
-            message += ' ' + navigator.mozL10n.get('answer-wrong-2', {is: formatIs(info)});
+            message += ' ' + document.webL10n.get('answer-wrong-2', {is: formatIs(info)});
             showMapBoxBottom(message, 'wrong');
         }
     }
@@ -343,10 +343,10 @@ function WorldMap() {
                 $('#btn-start').removeClass('icon-play-arrow').addClass('icon-stop');
                 $('#btn-next').css('visibility', 'visible');
 
-                message = navigator.mozL10n.get('start-splash-1');
+                message = document.webL10n.get('start-splash-1');
                 if (validatedCounter > 0) {
                     message += '<br>';
-                    message += navigator.mozL10n.get('start-splash-2', {nb: App.countries.length - validatedCounter});
+                    message += document.webL10n.get('start-splash-2', {nb: App.countries.length - validatedCounter});
                 }
                 App.showSplashMessage(message, 'zoomInDown', drawQuestion);
             }

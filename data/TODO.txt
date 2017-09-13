@@ -1,0 +1,44 @@
+Disputed:
+Israel/Palestine
+Cyprus/Northern Cyprus
+Morocco/Western Sahara
+Serbia/Kosovo
+Somalia/Somaliland
+China/Taiwan
+New Zealand/Cook Islands/Niue
+Antarctica
+
+Dependent:
+Puerto Rico
+French Guiana
+Guadeloupe
+Martinique
+New Caledonia
+American Samoa
+French Polynesia
+Guam
+
+Other:
+Tokelau
+Wallis and Futuna
+
+With flags:
+AI Anguilla
+AW Aruba
+AX Aland Islands
+BM Bermuda
+CW Curacao
+FO Faroe Islands
+GG Guernsey
+GI Gibraltar
+HK Hong Kong SAR China
+IM Isle of Man
+JE Jersey
+KY Cayman Islands
+MO Macau SAR China
+MS Montserrat
+RE Reunion
+SX Sint Maarten
+TC Turks and Caicos Islands
+VG British Virgin Islands
+VI U.S. Virgin Islands

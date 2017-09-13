@@ -1,10 +1,6 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?hr4byz');
-	src:url('fonts/icomoon.eot?hr4byz#iefix') format('embedded-opentype'),
-		url('fonts/icomoon.ttf?hr4byz') format('truetype'),
-		url('fonts/icomoon.woff?hr4byz') format('woff'),
-		url('fonts/icomoon.svg?hr4byz#icomoon') format('svg');
+	src: url('fonts/icomoon.woff'); /* WOFF is enough, browsers without support don't work anyway*/
 	font-weight: normal;
 	font-style: normal;
 }
