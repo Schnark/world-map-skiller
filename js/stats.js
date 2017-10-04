@@ -56,7 +56,7 @@ function Stats() {
                 '<aside class="pack-end">',
                 '</aside>',
                 '<p>' + info.name + '</p>',
-                '<p>' + info.continent + '</p>',
+                '<p>' + info.continent + ' (' + document.webL10n.get('nb-people', {population: info.population}) + ')</p>',
                 '</li>'
             ].join(''));
             $('#stats-list', $page).append($li);

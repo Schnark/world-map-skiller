@@ -14,6 +14,8 @@ French Guiana
 Guadeloupe
 Martinique
 New Caledonia
+Reunion
+Mayotte
 American Samoa
 French Polynesia
 Guam
@@ -37,8 +39,8 @@ JE Jersey
 KY Cayman Islands
 MO Macau SAR China
 MS Montserrat
-RE Reunion
 SX Sint Maarten
 TC Turks and Caicos Islands
 VG British Virgin Islands
 VI U.S. Virgin Islands
+

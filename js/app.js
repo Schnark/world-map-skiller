@@ -58,6 +58,12 @@ var App = {
         App.store = Rhaboo.persistent(App.name);
         if (!App.store.stats) {
             App.store.write('stats', {});
+        } else {
+            // remove countries that have been deleted
+            //App.store.stats.erase('ATF');
+            //App.store.stats.erase('FLK');
+            App.store.stats.erase('MDV');
+            App.store.stats.erase('SYC');
         }
 
         // init map overlay: set line-height CSS property
@@ -96,7 +102,7 @@ var App = {
             isVariant: isVariant === 'x' ? '' : isVariant,
             grammarVariant: grammarVariant === 'x' ? '' : grammarVariant,
             continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
-            population: (properties.pop_est / 1000000).toFixed(1),
+            population: (Math.round(properties.pop_est / 100000) / 10).toLocaleString(),
             flag: flag
         };
 

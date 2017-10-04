@@ -153,7 +153,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 
         <h1 data-l10n-id="maps">Maps</h1>
         <p>
-          <span><strong data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following two maps of Europa and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</strong></span>
+          <span><strong data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following three maps of Europa, the Indian Ocean, and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</strong></span>
         </p>
         <div class="static-map-wrapper"><div id="static-map-europa" class="static-map">
           <img src="data/europa.svg">
@@ -161,6 +161,11 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
           <div id="static-map-mc"><span class="f32"><span class="flag mc"></span></span><p><b data-l10n-id="Monaco">Monaco</b></p></div>
           <div id="static-map-sm"><span class="f32"><span class="flag sm"></span></span><p><b data-l10n-id="SanMarino">San Marino</b></p></div>
           <div id="static-map-va"><span class="f32"><span class="flag va"></span></span><p><b data-l10n-id="VaticanCity">Vatican City</b></p></div>
+        </div></div>
+        <div class="static-map-wrapper"><div id="static-map-indian" class="static-map">
+          <img src="data/indian.svg">
+          <div id="static-map-mv"><span class="f32"><span class="flag mv"></span></span><p><b data-l10n-id="Maldives">Maldives</b></p></div>
+          <div id="static-map-sc"><span class="f32"><span class="flag sc"></span></span><p><b data-l10n-id="Seychelles">Seychelles</b></p></div>
         </div></div>
         <div class="static-map-wrapper"><div id="static-map-oceania" class="static-map">
           <img src="data/oceania.svg">
@@ -181,12 +186,17 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 
         <h1 data-l10n-id="version">Version</h1>
         <p>
-          <span>2.4</span>
+          <span>2.5</span>
         </p>
 
         <h1 data-l10n-id="license">License</h1>
         <p>
           <span>GNU Affero GPL v3.0</span>
+        </p>
+
+        <h1 data-l10n-id="libraries">Libraries</h1>
+        <p>
+          <span>Building-Blocks (Mozilla), <a href="http://leafletjs.com/" target="_blank" rel="noopener">leaflet</a>, <a href="https://jquery.com/" target="_blank" rel="noopener">jQuery</a>, <a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">animate.css</a>, <a href="https://github.com/adrianmay/rhaboo" target="_blank" rel="noopener">rhaboo</a>, <a href="https://github.com/lafeber/world-flags-sprite" target="_blank" rel="noopener">world-flags-sprite</a></span>
         </p>
 
         <h1 data-l10n-id="authors">Authors</h1>

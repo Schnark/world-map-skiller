@@ -2,12 +2,13 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v2.4',
+var VERSION = 'v2.5',
 	FILES = [
 		'index.html',
 		'css/style.css',
 		'data/europa.svg',
 		'data/geo.json',
+		'data/indian.svg',
 		'data/oceania.svg',
 		'js/app.js',
 		'js/stats.js',

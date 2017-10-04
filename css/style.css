@@ -317,6 +317,22 @@ section[data-type="list"] aside.pack-end span {
 	left: 60%;
 }
 
+#static-map-indian {
+	width: 314px;
+}
+
+#static-map-mv {
+	position: absolute;
+	top: 37%;
+	right: 3%;
+}
+
+#static-map-sc {
+	position: absolute;
+	bottom: 40%;
+	left: 15%;
+}
+
 #static-map-oceania {
 	width: 1080px;
 	min-width: 810px;
