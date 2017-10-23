@@ -65,6 +65,17 @@ var App = {
             App.store.stats.erase('MDV');
             App.store.stats.erase('SYC');
         }
+        if (!App.store.settings) {
+            App.store.write('settings', {flag: 1, details: true});
+        }
+
+        // init settings
+        $('[name="settings-flag"][value="' + App.store.settings.flag + '"]').prop('checked', true);
+        $('#settings-details').prop('checked', App.store.settings.details);
+        $('[name="settings-flag"], #settings-details').on('change', function() {
+            App.store.settings.write('flag', Number($('[name="settings-flag"]:checked').val()));
+            App.store.settings.write('details', $('#settings-details').prop('checked'));
+        });
 
         // init map overlay: set line-height CSS property
         App.$splashMessage.css('line-height', (window.innerHeight - 95) + 'px');
@@ -78,6 +89,21 @@ var App = {
             App.stats = new Stats();
             App.hideSplashMessage();
         });
+    },
+
+    formatNumber: function(number, decimal) {
+       var str;
+       if (decimal) {
+           number = Math.round(number * 10) / 10;
+           str = number.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+           if (/^\d+$/.test(str)) { //fooFractionDigits not supported, missing ".0"
+               str = (number + 0.5).toLocaleString().replace(/5$/, '0');
+           }
+           return str;
+       } else {
+           number = Math.round(number);
+           return number.toLocaleString();
+       }
     },
 
     getCountryInfo: function(properties) {
@@ -102,7 +128,7 @@ var App = {
             isVariant: isVariant === 'x' ? '' : isVariant,
             grammarVariant: grammarVariant === 'x' ? '' : grammarVariant,
             continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
-            population: (Math.round(properties.pop_est / 100000) / 10).toLocaleString(),
+            population: App.formatNumber(properties.pop_est / 1e6, true),
             flag: flag
         };
 

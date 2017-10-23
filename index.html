@@ -151,6 +151,16 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
           <span><strong data-l10n-id="description-info-3">A country is validated as soon as you found it two times in only one try.</strong></span>
         </p>
 
+        <h1 data-l10n-id="settings">Settings</h1>
+        <p>
+          <span data-l10n-id="settings-info">If the challenge is too easy for you, you can try to make it harder with the following settings:</span><br>
+          <span style="line-height: 2;">
+          <label><input type="radio" value="1" name="settings-flag"><span data-l10n-id="settings-flag-1">Show both country name and flag</span></label><br>
+          <label><input type="radio" value="0" name="settings-flag"><span data-l10n-id="settings-flag-0">Show country name only</span></label><br>
+          <label><input type="radio" value="2" name="settings-flag"><span data-l10n-id="settings-flag-2">Show flag only</span></label><br>
+          <label><input type="checkbox" id="settings-details"><span data-l10n-id="settings-details">Show region and population</span></label></span>
+        </p>
+
         <h1 data-l10n-id="maps">Maps</h1>
         <p>
           <span><strong data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following three maps of Europa, the Indian Ocean, and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</strong></span>
@@ -186,7 +196,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 
         <h1 data-l10n-id="version">Version</h1>
         <p>
-          <span>2.5</span>
+          <span>2.6</span>
         </p>
 
         <h1 data-l10n-id="license">License</h1>

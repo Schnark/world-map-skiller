@@ -143,7 +143,7 @@ function WorldMap() {
                     }
                 });
             });
-            distance = (min / 1000).toFixed(0);
+            distance = App.formatNumber(min / 1000);
             correct = false;
         }
 
@@ -175,9 +175,23 @@ function WorldMap() {
         question = App.getCountryInfo(country.properties);
         question.tries = 0;
 
-        message = '<span class="f32"><span class="flag ' + question.flag + '"></span></span>';
-        message += '<p>' + document.webL10n.get('where-is-country', {is: formatIs(question)}) + '<br>';
-        message += question.continent + ' (' + document.webL10n.get('nb-people', {population: question.population}) + ')</p>';
+        message = '';
+        if (App.store.settings.flag) {
+            message += '<span class="f32"><span class="flag ' + question.flag + '"></span></span>';
+        }
+        message += '<p>';
+        if (App.store.settings.flag < 2) {
+            message += document.webL10n.get('where-is-country', {is: formatIs(question)});
+        } else {
+            message += document.webL10n.get('where-is-country-flag');
+        }
+        message += '<br>';
+        if (App.store.settings.details) {
+            message += question.continent + ' (' + document.webL10n.get('nb-people', {population: question.population}) + ')';
+        } else {
+            message += '&nbsp;';
+        }
+        message += '</p>';
 
         showMapBoxTop(message);
         hideMapBoxBottom();

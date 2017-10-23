@@ -129,25 +129,25 @@ function Stats() {
                 html = '<span class="icon-checkmark"></span>';
             }
             else {
-                html  = '<p>' + document.webL10n.get('score-best', {value: scoreMin ? scoreMin : '-'}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-last', {value: scoreLast ? scoreLast : '-'}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-worst', {value: scoreMax ? scoreMax : '-'}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-average', {value: scoreAvg ? scoreAvg.toFixed(1) : '-'}) + '</p>';
+                html  = '<p>' + document.webL10n.get('score-best', {value: scoreMin ? App.formatNumber(scoreMin) : document.webL10n.get('no-value')}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-last', {value: scoreLast ? App.formatNumber(scoreLast) : document.webL10n.get('no-value')}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-worst', {value: scoreMax ? App.formatNumber(scoreMax) : document.webL10n.get('no-value')}) + '</p>';
+                html += '<p>' + document.webL10n.get('score-average', {value: scoreAvg ? App.formatNumber(scoreAvg, true) : document.webL10n.get('no-value')}) + '</p>';
             }
             $('#score-' + code + ' .pack-end', $page).html(html);
         });
         if (statsSize) {
-            overallScoreAvg = (overallScoreAvg / statsSize).toFixed(1);
-            overallScoreMin = (overallScoreMin / statsSize).toFixed(1);
-            overallScoreLast = (overallScoreLast / statsSize).toFixed(1);
+            overallScoreAvg = App.formatNumber(overallScoreAvg / statsSize, true);
+            overallScoreMin = App.formatNumber(overallScoreMin / statsSize, true);
+            overallScoreLast = App.formatNumber(overallScoreLast / statsSize, true);
         }
 
         $('#stats-list-header h2', $page).html(
-            document.webL10n.get('scores-by-country', {nb: validatedCounter, total: App.countries.length})
+            document.webL10n.get('scores-by-country', {nb: App.formatNumber(validatedCounter), total: App.formatNumber(App.countries.length)})
         );
-        $('#overall-score-avg', $page).html(overallScoreAvg ? overallScoreAvg : '-');
-        $('#overall-score-min', $page).html(overallScoreMin ? overallScoreMin : '-');
-        $('#overall-score-last', $page).html(overallScoreLast ? overallScoreLast : '-');
+        $('#overall-score-avg', $page).html(overallScoreAvg ? overallScoreAvg : document.webL10n.get('no-value'));
+        $('#overall-score-min', $page).html(overallScoreMin ? overallScoreMin : document.webL10n.get('no-value'));
+        $('#overall-score-last', $page).html(overallScoreLast ? overallScoreLast : document.webL10n.get('no-value'));
     }
 
     init();
