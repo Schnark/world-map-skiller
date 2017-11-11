@@ -148,55 +148,23 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
         <p>
           <span data-l10n-id="description-info-1">Geography app to learn world countries in a fun way.</span><br>
           <span><strong data-l10n-id="description-info-2">Your mission, should you decide to accept it, is to validate all countries.</strong></span><br>
-          <span><strong data-l10n-id="description-info-3">A country is validated as soon as you found it two times in only one try.</strong></span>
+          <span><strong data-l10n-id="description-info-3">A country is validated as soon as you found it two times in only one try.</strong></span><br>
+          <span><strong data-l10n-id="description-info-4">Included are the following countries: All 193 members of the UN, Vatican City, 6 partially recognized states (Palestine, Western Sahara, Kosovo, Taiwan, Cook Islands, Niue), Antarctica, and 13 dependent regions (Greenland, American Samoa, Guam, Puerto Rico, French Guiana, French Polynesia, Guadeloupe, Mayotte, Martinique, New Caledonia, Réunion, Wallis and Futuna, Tokelau) that are so big and so near to other countries, that they can’t be omitted.</strong></span>
         </p>
 
         <h1 data-l10n-id="settings">Settings</h1>
         <p>
           <span data-l10n-id="settings-info">If the challenge is too easy for you, you can try to make it harder with the following settings:</span><br>
           <span style="line-height: 2;">
-          <label><input type="radio" value="1" name="settings-flag"><span data-l10n-id="settings-flag-1">Show both country name and flag</span></label><br>
-          <label><input type="radio" value="0" name="settings-flag"><span data-l10n-id="settings-flag-0">Show country name only</span></label><br>
-          <label><input type="radio" value="2" name="settings-flag"><span data-l10n-id="settings-flag-2">Show flag only</span></label><br>
+          <label><input type="checkbox" id="settings-name"><span data-l10n-id="settings-name">Show name of the country</span></label><br>
+          <label><input type="checkbox" id="settings-capital"><span data-l10n-id="settings-capital">Show capital</span></label><br>
+          <label><input type="checkbox" id="settings-flag"><span data-l10n-id="settings-flag">Show flag</span></label><br>
           <label><input type="checkbox" id="settings-details"><span data-l10n-id="settings-details">Show region and population</span></label></span>
         </p>
 
-        <h1 data-l10n-id="maps">Maps</h1>
-        <p>
-          <span><strong data-l10n-id="maps-info">Some countries are too small to be shown on the main map. You can learn about them in the following three maps of Europa, the Indian Ocean, and Oceania. Note that there are some other small islands not shown, e.g. the Falkland islands, but none recognized as independent or near some smaller islands that are shown.</strong></span>
-        </p>
-        <div class="static-map-wrapper"><div id="static-map-europa" class="static-map">
-          <img src="data/europa.svg">
-          <div id="static-map-li"><span class="f32"><span class="flag li"></span></span><p><b data-l10n-id="Liechtenstein">Liechtenstein</b></p></div>
-          <div id="static-map-mc"><span class="f32"><span class="flag mc"></span></span><p><b data-l10n-id="Monaco">Monaco</b></p></div>
-          <div id="static-map-sm"><span class="f32"><span class="flag sm"></span></span><p><b data-l10n-id="SanMarino">San Marino</b></p></div>
-          <div id="static-map-va"><span class="f32"><span class="flag va"></span></span><p><b data-l10n-id="VaticanCity">Vatican City</b></p></div>
-        </div></div>
-        <div class="static-map-wrapper"><div id="static-map-indian" class="static-map">
-          <img src="data/indian.svg">
-          <div id="static-map-mv"><span class="f32"><span class="flag mv"></span></span><p><b data-l10n-id="Maldives">Maldives</b></p></div>
-          <div id="static-map-sc"><span class="f32"><span class="flag sc"></span></span><p><b data-l10n-id="Seychelles">Seychelles</b></p></div>
-        </div></div>
-        <div class="static-map-wrapper"><div id="static-map-oceania" class="static-map">
-          <img src="data/oceania.svg">
-          <div id="static-map-as"><span class="f32"><span class="flag as"></span></span><p data-l10n-id="AmericanSamoa">American Samoa (USA)</p></div>
-          <div id="static-map-ck"><span class="f32"><span class="flag ck"></span></span><p><b data-l10n-id="CookIslands">Cook Islands</b></p></div>
-          <div id="static-map-fm"><span class="f32"><span class="flag fm"></span></span><p><b data-l10n-id="Micronesia">Micronesia</b></p></div>
-          <div id="static-map-gu"><span class="f32"><span class="flag gu"></span></span><p data-l10n-id="Guam">Guam (USA)</p></div>
-          <div id="static-map-ki"><span class="f32"><span class="flag ki"></span></span><p><b data-l10n-id="Kiribati">Kiribati</b></p></div>
-          <div id="static-map-mh"><span class="f32"><span class="flag mh"></span></span><p><b data-l10n-id="MarshallIslands">Marshall Islands</b></p></div>
-          <div id="static-map-nr"><span class="f32"><span class="flag nr"></span></span><p><b data-l10n-id="Nauru">Nauru</b></p></div>
-          <div id="static-map-nu"><span class="f32"><span class="flag nu"></span></span><p><b data-l10n-id="Niue">Niue</b></p></div>
-          <div id="static-map-pf"><span class="f32"><span class="flag pf"></span></span><p data-l10n-id="FrenchPolynesia">French Polynesia (France)</p></div>
-          <div id="static-map-pw"><span class="f32"><span class="flag pw"></span></span><p><b data-l10n-id="Palau">Palau</b></p></div>
-          <div id="static-map-to"><span class="f32"><span class="flag to"></span></span><p><b data-l10n-id="Tonga">Tonga</b></p></div>
-          <div id="static-map-tv"><span class="f32"><span class="flag tv"></span></span><p><b data-l10n-id="Tuvalu">Tuvalu</b></p></div>
-          <div id="static-map-ws"><span class="f32"><span class="flag ws"></span></span><p><b data-l10n-id="WesternSamoa">Western Samoa</b></p></div>
-        </div></div>
-
         <h1 data-l10n-id="version">Version</h1>
         <p>
-          <span>2.6</span>
+          <span>3.0</span>
         </p>
 
         <h1 data-l10n-id="license">License</h1>
@@ -206,7 +174,7 @@ if (navigator.serviceWorker && !(navigator.mozApps && navigator.mozApps.installP
 
         <h1 data-l10n-id="libraries">Libraries</h1>
         <p>
-          <span>Building-Blocks (Mozilla), <a href="http://leafletjs.com/" target="_blank" rel="noopener">leaflet</a>, <a href="https://jquery.com/" target="_blank" rel="noopener">jQuery</a>, <a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">animate.css</a>, <a href="https://github.com/adrianmay/rhaboo" target="_blank" rel="noopener">rhaboo</a>, <a href="https://github.com/lafeber/world-flags-sprite" target="_blank" rel="noopener">world-flags-sprite</a></span>
+          <span><a href="https://github.com/daneden/animate.css" target="_blank" rel="noopener">animate.css</a>, Building-Blocks (Mozilla), <a href="https://icomoon.io" target="_blank" rel="noopener">icomoon</a>, <a href="https://jquery.com/" target="_blank" rel="noopener">jQuery</a>, <a href="https://github.com/fabi1cazenave/webL10n" target="_blank" rel="noopener">l10n.js</a>, <a href="http://leafletjs.com/" target="_blank" rel="noopener">leaflet</a>, <a href="https://github.com/adrianmay/rhaboo" target="_blank" rel="noopener">rhaboo</a>, <a href="https://github.com/lafeber/world-flags-sprite" target="_blank" rel="noopener">world-flags-sprite</a></span>
         </p>
 
         <h1 data-l10n-id="authors">Authors</h1>

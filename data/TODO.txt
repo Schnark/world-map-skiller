@@ -1,14 +1,20 @@
 Disputed:
 Israel/Palestine
-Cyprus/Northern Cyprus
 Morocco/Western Sahara
 Serbia/Kosovo
-Somalia/Somaliland
 China/Taiwan
 New Zealand/Cook Islands/Niue
 Antarctica
 
+Disputed, but not included:
+Cyprus/Northern Cyprus
+Somalia/Somaliland
+Georgia/Abkhazia/South Ossetia
+Azerbaijan/Nagorno-Karabakh Republic
+Moldova/Transnistria
+
 Dependent:
+Greenland
 Puerto Rico
 French Guiana
 Guadeloupe
@@ -19,8 +25,6 @@ Mayotte
 American Samoa
 French Polynesia
 Guam
-
-Other:
 Tokelau
 Wallis and Futuna
 
@@ -43,4 +47,3 @@ SX Sint Maarten
 TC Turks and Caicos Islands
 VG British Virgin Islands
 VI U.S. Virgin Islands
-

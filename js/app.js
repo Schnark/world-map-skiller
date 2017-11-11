@@ -60,20 +60,37 @@ var App = {
             App.store.write('stats', {});
         } else {
             // remove countries that have been deleted
-            //App.store.stats.erase('ATF');
-            //App.store.stats.erase('FLK');
-            App.store.stats.erase('MDV');
-            App.store.stats.erase('SYC');
+            App.store.stats.erase('ATF');
+            App.store.stats.erase('FLK');
+            App.store.stats.erase('CYN');
+            App.store.stats.erase('SOL');
+            // TODO rename gu_a3 to ISO codes
+            // KOS -> ?, PSX -> PSE, SAH -> ESH, SDS -> SSD
         }
         if (!App.store.settings) {
-            App.store.write('settings', {flag: 1, details: true});
+            App.store.write('settings', {name: true, flag: true, capital: true, details: true});
+        } else if (typeof App.store.settings.flag === 'number') {
+            // translate old settings
+            App.store.settings.write('capital', true);
+            App.store.settings.write('name', App.store.settings.flag !== 2);
+            App.store.settings.write('flag', !!App.store.settings.flag);
         }
 
         // init settings
-        $('[name="settings-flag"][value="' + App.store.settings.flag + '"]').prop('checked', true);
+        $('#settings-name').prop('checked', App.store.settings.name);
+        $('#settings-flag').prop('checked', App.store.settings.flag);
+        $('#settings-capital').prop('checked', App.store.settings.capital);
         $('#settings-details').prop('checked', App.store.settings.details);
-        $('[name="settings-flag"], #settings-details').on('change', function() {
-            App.store.settings.write('flag', Number($('[name="settings-flag"]:checked').val()));
+        $('#settings-name').on('change', function() {
+            App.store.settings.write('name', $('#settings-name').prop('checked'));
+        });
+        $('#settings-flag').on('change', function() {
+            App.store.settings.write('flag', $('#settings-flag').prop('checked'));
+        });
+        $('#settings-capital').on('change', function() {
+            App.store.settings.write('capital', $('#settings-capital').prop('checked'));
+        });
+        $('#settings-details').on('change', function() {
             App.store.settings.write('details', $('#settings-details').prop('checked'));
         });
 
@@ -106,30 +123,37 @@ var App = {
        }
     },
 
-    getCountryInfo: function(properties) {
-        var flag;
-        var id = properties.name_long.replace(/ /g, '').replace(/\./g, '').replace(/'/g, '');
-        var name = document.webL10n.get(id);
-        var isVariant = document.webL10n.get(id + '-is', {}, 'x');
-        var grammarVariant = document.webL10n.get(id + '-grammar', {}, 'x');
-        var continent = document.webL10n.get(properties.continent.replace(/ /g, '').replace(/\./g, ''));
-        var subregion = document.webL10n.get(properties.subregion.replace(/ /g, '').replace(/\./g, ''));
+    formatFlag: function(code, inline) {
+        return '<span class="f32"><span class="flag ' + code + '"' +
+            (inline ? ' style="vertical-align: middle;"' : '') + '></span></span>';
+    },
 
-        if ($.inArray(properties.name_long, ['Kosovo', 'Northern Cyprus', 'Somaliland']) >= 0) {
-             flag = '_' + properties.name_long.replace(/ /, '_');
-        }
-        else {
-            flag = properties.iso_a2.toLowerCase();
-        }
+    getCountryInfo: function(properties) {
+        var name = document.webL10n.get(properties.gu_a3 + '-name');
+        var isVariant = document.webL10n.get(properties.gu_a3 + '-is', {}, 'x');
+        var grammarVariant = document.webL10n.get(properties.gu_a3 + '-grammar', {}, 'x');
+        var continent = document.webL10n.get(properties.continent.replace(/ /g, ''));
+        var subregion = document.webL10n.get(properties.subregion.replace(/ /g, ''));
 
         return {
             code: properties.gu_a3,
-            name: name,
+            name: properties.dependent ?
+                document.webL10n.get('dependent-format', {
+                    name: name, dependent: document.webL10n.get(properties.dependent + '-name')
+                }) :
+                name,
+            nameSimple: name,
             isVariant: isVariant === 'x' ? '' : isVariant,
             grammarVariant: grammarVariant === 'x' ? '' : grammarVariant,
-            continent: continent + (properties.continent !== properties.subregion ? ' / ' + subregion : ''),
-            population: App.formatNumber(properties.pop_est / 1e6, true),
-            flag: flag
+            continent: properties.continent !== properties.subregion ?
+                document.webL10n.get('slash', {a: continent, b: subregion}) :
+                continent,
+            population: properties.pop_est >= 1e5 ?
+                document.webL10n.get('nb-people-e6', {population: App.formatNumber(properties.pop_est / 1e6, true)}) :
+                document.webL10n.get('nb-people', {population: App.formatNumber(properties.pop_est)}),
+            capital: document.webL10n.get(properties.gu_a3 + '-capital'),
+            flag: properties.iso_a2.toLowerCase(),
+            dependent: !!properties.dependent
         };
 
     },

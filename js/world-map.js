@@ -39,13 +39,13 @@ function WorldMap() {
     var countriesLayers = [];
     var highlightedCountryLayer;
     var colors = [ // http://www.flatuicolorpicker.com/
-        '#E74C3C', // ALIZARIN : india, australia
-        '#E26A6A', // SUNGLO : URSS
-        '#2ECC71', // EMERALD : argentina, mongolia
-        '#95A5A6', // CONCRETE : USA, chine, groenland, antartica
-        '#F1C40F', // SUN FLOWER : brazil, algeria
-        '#E67E22', // CARROT : canada, mexico
-        '#4183D7'  // ROYAL BLUE: france
+        '#E74C3C', // ALIZARIN: India, Australia
+        '#E26A6A', // SUNGLO: Russia
+        '#2ECC71', // EMERALD: Argentina, Mongolia
+        '#95A5A6', // CONCRETE: USA, China, Greenland, Antartica
+        '#F1C40F', // SUN FLOWER: Brazil, Algeria
+        '#E67E22', // CARROT: Canada, Mexico
+        '#4183D7'  // ROYAL BLUE: France
     ];
 
     var animations = [
@@ -77,20 +77,24 @@ function WorldMap() {
 
         map = L.map(
             'map',
-            {zoomControl: false, attributionControl: false, worldCopyJump: true, minZoom: 1, maxZoom: 8}
+            {zoomControl: false, attributionControl: false,
+                worldCopyJump: false, maxBoundsViscosity: 0.5,
+                minZoom: 1, maxZoom: 8} // TODO maxBounds: [[-180, 100], [210, -90]], update leaflet library first
         );
         map.doubleClickZoom.disable();
 
         mainLayer = L.geoJson(
             App.countries,
+            // NOTE the alphabetical order by code coincides with the desired order for overlapping countries
             {
                 style: function(feature) {
                     return {
                         color: 'white',
-                        fillColor: colors[feature.properties.mapcolor7 - 1],
-                        fillOpacity: 1,
+                        fillColor: feature.properties.mapcolor7 ? colors[feature.properties.mapcolor7 - 1] : '#e2f7fb',
+                        fillOpacity: feature.properties.mapcolor7 ? 1 : 0.5,
                         opacity: 1,
-                        weight: 1
+                        weight: 1,
+                        stroke: !!feature.properties.mapcolor7
                     };
                 },
                 onEachFeature: function(feature, layer) {
@@ -125,7 +129,7 @@ function WorldMap() {
     }
 
     function checkAnswer(layer) {
-        var min;
+        var min = Infinity;
         var distance;
         var correct;
         var stats;
@@ -138,12 +142,12 @@ function WorldMap() {
             // compute minimal distance between 2 polygons
             $.each(getCountryBiggestPolygon(countriesLayers[question.code])._latlngs, function(i, latlng1) {
                 $.each(getCountryBiggestPolygon(layer)._latlngs, function(j, latlng2) {
-                    if (!min || latlng1.distanceTo(latlng2) < min) {
+                    if (latlng1.distanceTo(latlng2) < min) {
                         min = latlng1.distanceTo(latlng2);
                     }
                 });
             });
-            distance = App.formatNumber(min / 1000);
+            distance = min / 1000;
             correct = false;
         }
 
@@ -177,17 +181,26 @@ function WorldMap() {
 
         message = '';
         if (App.store.settings.flag) {
-            message += '<span class="f32"><span class="flag ' + question.flag + '"></span></span>';
+            message += App.formatFlag(question.flag);
         }
         message += '<p>';
-        if (App.store.settings.flag < 2) {
+        if (App.store.settings.name) {
             message += document.webL10n.get('where-is-country', {is: formatIs(question)});
-        } else {
+        } else if (App.store.settings.capital) {
+            message += document.webL10n.get('where-is-country-capital', {capital: question.capital});
+        } else if (App.store.settings.flag) {
             message += document.webL10n.get('where-is-country-flag');
+        } else {
+            message += document.webL10n.get('where-is-country-none');
         }
         message += '<br>';
         if (App.store.settings.details) {
-            message += question.continent + ' (' + document.webL10n.get('nb-people', {population: question.population}) + ')';
+            message += question.continent + ', ' + question.population;
+            if (App.store.settings.capital && App.store.settings.name) {
+                message += ', ' + document.webL10n.get('capital', {capital: question.capital});
+            }
+        } else if (App.store.settings.capital && App.store.settings.name) {
+            message += document.webL10n.get('capital', {capital: question.capital})
         } else {
             message += '&nbsp;';
         }
@@ -213,7 +226,7 @@ function WorldMap() {
     function endOfMission() {
         var message;
 
-        if (validatedCounter === App.countries.length) {
+        if (validatedCounter === App.countries.length) { // TODO - shouldOmit
             startOrStop();
 
             message = '<p>' + document.webL10n.get('end-of-mission-1') + '</p>';
@@ -270,18 +283,18 @@ function WorldMap() {
 
         unselectCountry();
         highlightedCountryLayer = e.target;
-        //highlightedCountryLayer.bringToFront();
         highlightedCountryLayer.setStyle({
             fillColor: '#22313F'
-            //weight: 3,
-            //color: '#f33'
         });
 
         info = App.getCountryInfo(highlightedCountryLayer.feature.properties);
         if (!started) {
-            message = '<span class="f32"><span class="flag ' + info.flag + '"></span></span>';
+            message = App.formatFlag(info.flag);
             message += '<p><b>' + info.name + '</b><br>';
-            message += info.continent + ' (' + document.webL10n.get('nb-people', {population: info.population}) + ')</p>';
+            message += info.continent + ', ' +
+                info.population + ', ' +
+                document.webL10n.get('capital', {capital: info.capital});
+            message += '</p>';
 
             showMapBoxTop(message);
             return;
@@ -311,9 +324,21 @@ function WorldMap() {
                 message = document.webL10n.get('answer-wrong-1-close');
             }
             else {
-                message = document.webL10n.get('answer-wrong-1-far', {distance: result.distance});
+                message = document.webL10n.get('answer-wrong-1-far', {distance: App.formatNumber(result.distance)});
             }
-            message += ' ' + document.webL10n.get('answer-wrong-2', {is: formatIs(info)});
+            message += ' ';
+            if (App.store.settings.name) {
+                message += document.webL10n.get('answer-wrong-2', {is: formatIs(info)});
+            } else if (App.store.settings.capital) {
+                message += document.webL10n.get('answer-wrong-2-capital', {is: formatIs(info), capital: info.capital});
+            } else if (App.store.settings.flag) {
+                message += document.webL10n.get('answer-wrong-2-flag', {
+                    is: formatIs(info),
+                    flag: App.formatFlag(info.flag, true)
+                });
+            } else {
+                message += document.webL10n.get('answer-wrong-2-none', {is: formatIs(info)});
+            }
             showMapBoxBottom(message, 'wrong');
         }
     }
@@ -341,7 +366,7 @@ function WorldMap() {
             if (App.stats.isCountryValidated(country.properties.gu_a3)) {
                 validatedCounter += 1;
             }
-            else {
+            else { // TODO if (!shouldOmit)
                 drawPile.push(id);
             }
         });
@@ -360,7 +385,7 @@ function WorldMap() {
                 message = document.webL10n.get('start-splash-1');
                 if (validatedCounter > 0) {
                     message += '<br>';
-                    message += document.webL10n.get('start-splash-2', {nb: App.countries.length - validatedCounter});
+                    message += document.webL10n.get('start-splash-2', {nb: drawPile.length});
                 }
                 App.showSplashMessage(message, 'zoomInDown', drawQuestion);
             }
@@ -382,7 +407,6 @@ function WorldMap() {
         if (highlightedCountryLayer) {
             mainLayer.resetStyle(highlightedCountryLayer);
             highlightedCountryLayer = null;
-            //highlightedCountryLayer.bringToBack();
         }
     }
 

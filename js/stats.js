@@ -22,7 +22,7 @@
 
 function Stats() {
     var $page = $('#stats');
-    var $clearDialog = $('#stats-clear-dialog', $page);
+    var $clearDialog = $('#stats-clear-dialog');
 
     function init() {
         $('#stats-open').on('click', function() {
@@ -44,23 +44,27 @@ function Stats() {
             clear();
         });
 
-        $.each(App.countries, function(i, country) {
-            var $li;
+        $('#stats-list').html(App.countries.map(function(country) {
             var info = App.getCountryInfo(country.properties);
 
-            $li = $([
-                '<li id="score-' + info.code + '">',
+            return [
+                '<li id="score-' + info.code + '"' + (info.dependent ? ' class="dependent"' : '') + '>',
                 '<aside class="pack-start">',
-                '<span class="f32"><span class="flag ' + info.flag + '"></span></span>',
+                App.formatFlag(info.flag),
                 '</aside>',
                 '<aside class="pack-end">',
                 '</aside>',
-                '<p>' + info.name + '</p>',
-                '<p>' + info.continent + ' (' + document.webL10n.get('nb-people', {population: info.population}) + ')</p>',
+                '<p style="padding-top: 0.5rem;">' + info.nameSimple + '</p>', // TODO move to stylesheet
+                '<p style="line-height: 1.3rem;">',
+                info.continent,
+                '<br>',
+                info.population,
+                ', ', // TODO l10n ?
+                document.webL10n.get('capital', {capital: info.capital}),
+                '</p>',
                 '</li>'
-            ].join(''));
-            $('#stats-list', $page).append($li);
-        });
+            ].join('');
+        }).join(''));
     }
 
     function addCountryScore(code, score) {
@@ -75,12 +79,12 @@ function Stats() {
     function clear() {
         App.store.write('stats', {});
 
-        $('#overall-score-avg', $page).html('-');
-        $('#overall-score-min', $page).html('-');
-        $('#overall-score-last', $page).html('-');
+        $('#overall-score-avg').html(document.webL10n.get('no-value'));
+        $('#overall-score-min').html(document.webL10n.get('no-value'));
+        $('#overall-score-last').html(document.webL10n.get('no-value'));
 
-        $.each(App.countries, function(i, country) {
-            $('#score-' + country.properties.gu_a3 + ' .pack-end', $page).html('');
+        App.countries.forEach(function(country) {
+            $('#score-' + country.properties.gu_a3 + ' .pack-end').html('');
         });
 
         $clearDialog.removeClass('show').addClass('hide');
@@ -93,7 +97,7 @@ function Stats() {
 
     function isCountryValidated(code) {
         if (App.store.stats[code]) {
-            return $.grep(App.store.stats[code], function(score) {return score === 1;}).length >= 2;
+            return App.store.stats[code].filter(function(score) {return score === 1;}).length >= 2;
         }
         else {
             return false;
@@ -134,7 +138,7 @@ function Stats() {
                 html += '<p>' + document.webL10n.get('score-worst', {value: scoreMax ? App.formatNumber(scoreMax) : document.webL10n.get('no-value')}) + '</p>';
                 html += '<p>' + document.webL10n.get('score-average', {value: scoreAvg ? App.formatNumber(scoreAvg, true) : document.webL10n.get('no-value')}) + '</p>';
             }
-            $('#score-' + code + ' .pack-end', $page).html(html);
+            $('#score-' + code + ' .pack-end').html(html);
         });
         if (statsSize) {
             overallScoreAvg = App.formatNumber(overallScoreAvg / statsSize, true);
@@ -142,12 +146,12 @@ function Stats() {
             overallScoreLast = App.formatNumber(overallScoreLast / statsSize, true);
         }
 
-        $('#stats-list-header h2', $page).html(
+        $('#stats-list-header h2').html(
             document.webL10n.get('scores-by-country', {nb: App.formatNumber(validatedCounter), total: App.formatNumber(App.countries.length)})
         );
-        $('#overall-score-avg', $page).html(overallScoreAvg ? overallScoreAvg : document.webL10n.get('no-value'));
-        $('#overall-score-min', $page).html(overallScoreMin ? overallScoreMin : document.webL10n.get('no-value'));
-        $('#overall-score-last', $page).html(overallScoreLast ? overallScoreLast : document.webL10n.get('no-value'));
+        $('#overall-score-avg').html(overallScoreAvg ? overallScoreAvg : document.webL10n.get('no-value'));
+        $('#overall-score-min').html(overallScoreMin ? overallScoreMin : document.webL10n.get('no-value'));
+        $('#overall-score-last').html(overallScoreLast ? overallScoreLast : document.webL10n.get('no-value'));
     }
 
     init();
