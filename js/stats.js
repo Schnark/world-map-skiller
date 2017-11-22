@@ -1,10 +1,10 @@
 /**
  * WorldMapSkiller
  *
- * written by Valéry Febvre
+ * originally written by Valéry Febvre
  * vfebvre@aester-eggs.com
  *
- * Copyright 2015 Valéry Febvre
+ * Copyright 2015 Valéry Febvre, 2017 Michael M.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,144 +20,161 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function Stats() {
-    var $page = $('#stats');
-    var $clearDialog = $('#stats-clear-dialog');
+/*global App, $*/
+/*jshint camelcase: false*/
+//jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-    function init() {
-        $('#stats-open').on('click', function() {
-            refresh();
-            open();
-        });
-        $('#stats-back').on('click', function() {
-            close();
-        });
-        $('#stats-clear').on('click', function() {
-            $clearDialog.removeClass('hide').addClass('show');
-        });
-        $('#stats-clear-cancel').on('click', function(e) {
-            e.preventDefault();
-            $clearDialog.removeClass('show').addClass('hide');
-        });
-        $('#stats-clear-validate').on('click', function(e) {
-            e.preventDefault();
-            clear();
-        });
+App.Stats = function () {
+	"use strict";
 
-        $('#stats-list').html(App.countries.map(function(country) {
-            var info = App.getCountryInfo(country.properties);
+	var $clearDialog = $('#stats-clear-dialog');
 
-            return [
-                '<li id="score-' + info.code + '"' + (info.dependent ? ' class="dependent"' : '') + '>',
-                '<aside class="pack-start">',
-                App.formatFlag(info.flag),
-                '</aside>',
-                '<aside class="pack-end">',
-                '</aside>',
-                '<p style="padding-top: 0.5rem;">' + info.nameSimple + '</p>', // TODO move to stylesheet
-                '<p style="line-height: 1.3rem;">',
-                info.continent,
-                '<br>',
-                info.population,
-                ', ', // TODO l10n ?
-                document.webL10n.get('capital', {capital: info.capital}),
-                '</p>',
-                '</li>'
-            ].join('');
-        }).join(''));
-    }
+	function open () {
+		$('#world-map').attr('class', 'currentToLeft');
+		$('#stats').attr('class', 'rightToCurrent');
+	}
 
-    function addCountryScore(code, score) {
-        if (App.store.stats[code]) {
-            App.store.stats[code].push(score);
-        }
-        else {
-            App.store.stats.write(code, [score]);
-        }
-    }
+	function close () {
+		$('#stats').attr('class', 'currentToRight');
+		$('#world-map').attr('class', 'leftToCurrent');
+	}
 
-    function clear() {
-        App.store.write('stats', {});
+	function init () {
+		$('#stats-open').on('click', function () {
+			refresh();
+			open();
+		});
+		$('#stats-back').on('click', function () {
+			close();
+		});
+		$('#stats-clear').on('click', function () {
+			$clearDialog.removeClass('hide').addClass('show');
+		});
+		$('#stats-clear-cancel').on('click', function (e) {
+			e.preventDefault();
+			$clearDialog.removeClass('show').addClass('hide');
+		});
+		$('#stats-clear-validate').on('click', function (e) {
+			e.preventDefault();
+			clear();
+		});
 
-        $('#overall-score-avg').html(document.webL10n.get('no-value'));
-        $('#overall-score-min').html(document.webL10n.get('no-value'));
-        $('#overall-score-last').html(document.webL10n.get('no-value'));
+		$('#stats-list').html(App.countries.map(function (country) {
+			var info = App.getCountryInfo(country.properties);
 
-        App.countries.forEach(function(country) {
-            $('#score-' + country.properties.gu_a3 + ' .pack-end').html('');
-        });
+			return [
+				'<li id="score-' + info.code + '"' + (info.dependent ? ' class="dependent"' : '') + '>',
+				'<aside class="pack-start">',
+				App.formatFlag(info.flag),
+				'</aside>',
+				'<aside class="pack-end">',
+				'</aside>',
+				'<p style="padding-top: 0.5rem;">' + info.nameSimple + '</p>', //TODO move to stylesheet
+				'<p style="line-height: 1.3rem;">',
+				info.continent,
+				'<br>',
+				info.population,
+				', ', //TODO l10n ?
+				document.webL10n.get('capital', {capital: info.capital}),
+				'</p>',
+				'</li>'
+			].join('');
+		}).join(''));
+	}
 
-        $clearDialog.removeClass('show').addClass('hide');
-    }
+	function addCountryScore (code, score) {
+		if (App.store.stats[code]) {
+			App.store.stats[code].push(score);
+		} else {
+			App.store.stats.write(code, [score]);
+		}
+	}
 
-    function close() {
-        $('#stats').attr('class', 'currentToRight');
-        $('#world-map').attr('class', 'leftToCurrent');
-    }
+	function clear () {
+		App.store.write('stats', {});
 
-    function isCountryValidated(code) {
-        if (App.store.stats[code]) {
-            return App.store.stats[code].filter(function(score) {return score === 1;}).length >= 2;
-        }
-        else {
-            return false;
-        }
-    }
+		$('#overall-score-avg').html(document.webL10n.get('no-value'));
+		$('#overall-score-min').html(document.webL10n.get('no-value'));
+		$('#overall-score-last').html(document.webL10n.get('no-value'));
 
-    function open() {
-        $('#world-map').attr('class', 'currentToLeft');
-        $('#stats').attr('class', 'rightToCurrent');
-    }
+		App.countries.forEach(function (country) {
+			$('#score-' + country.properties.gu_a3 + ' .pack-end').html('');
+		});
 
-    function refresh() {
-        var overallScoreAvg = 0, overallScoreMin = 0, overallScoreLast = 0;
-        var validatedCounter = 0;
-        var statsSize = 0;
+		$clearDialog.removeClass('show').addClass('hide');
+	}
 
-        $.each(App.store.stats, function(code, scores) {
-            var html;
-            var scoreAvg, scoreMin, scoreMax, scoreLast;
-            var validated = isCountryValidated(code);
+	function isCountryValidated (code) {
+		if (App.store.stats[code]) {
+			return App.store.stats[code].filter(function (score) {
+				return score === 1;
+			}).length >= 2;
+		} else {
+			return false;
+		}
+	}
 
-            scoreAvg = scores.reduce(function(sum, v) { return sum + v; }, 0) / scores.length;
-            scoreMin = Math.min.apply(Math, scores);
-            scoreMax = Math.max.apply(Math, scores);
-            scoreLast = scores[scores.length - 1];
-            overallScoreAvg += scoreAvg;
-            overallScoreMin += scoreMin;
-            overallScoreLast += scoreLast;
-            statsSize += 1;
+	function refresh () {
+		var overallScoreAvg = 0, overallScoreMin = 0, overallScoreLast = 0,
+			validatedCounter = 0,
+			statsSize = 0;
 
-            if (validated) {
-                validatedCounter += 1;
-                html = '<span class="icon-checkmark"></span>';
-            }
-            else {
-                html  = '<p>' + document.webL10n.get('score-best', {value: scoreMin ? App.formatNumber(scoreMin) : document.webL10n.get('no-value')}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-last', {value: scoreLast ? App.formatNumber(scoreLast) : document.webL10n.get('no-value')}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-worst', {value: scoreMax ? App.formatNumber(scoreMax) : document.webL10n.get('no-value')}) + '</p>';
-                html += '<p>' + document.webL10n.get('score-average', {value: scoreAvg ? App.formatNumber(scoreAvg, true) : document.webL10n.get('no-value')}) + '</p>';
-            }
-            $('#score-' + code + ' .pack-end').html(html);
-        });
-        if (statsSize) {
-            overallScoreAvg = App.formatNumber(overallScoreAvg / statsSize, true);
-            overallScoreMin = App.formatNumber(overallScoreMin / statsSize, true);
-            overallScoreLast = App.formatNumber(overallScoreLast / statsSize, true);
-        }
+		$.each(App.store.stats, function (code, scores) {
+			var html,
+				scoreAvg, scoreMin, scoreMax, scoreLast,
+				validated = isCountryValidated(code);
 
-        $('#stats-list-header h2').html(
-            document.webL10n.get('scores-by-country', {nb: App.formatNumber(validatedCounter), total: App.formatNumber(App.countries.length)})
-        );
-        $('#overall-score-avg').html(overallScoreAvg ? overallScoreAvg : document.webL10n.get('no-value'));
-        $('#overall-score-min').html(overallScoreMin ? overallScoreMin : document.webL10n.get('no-value'));
-        $('#overall-score-last').html(overallScoreLast ? overallScoreLast : document.webL10n.get('no-value'));
-    }
+			scoreAvg = scores.reduce(function (sum, v) {
+				return sum + v;
+			}, 0) / scores.length;
+			scoreMin = Math.min.apply(Math, scores);
+			scoreMax = Math.max.apply(Math, scores);
+			scoreLast = scores[scores.length - 1];
+			overallScoreAvg += scoreAvg;
+			overallScoreMin += scoreMin;
+			overallScoreLast += scoreLast;
+			statsSize += 1;
 
-    init();
+			if (validated) {
+				validatedCounter += 1;
+				html = '<span class="icon-checkmark"></span>';
+			} else {
+				html = '<p>' + document.webL10n.get('score-best', {
+					value: scoreMin ? App.formatNumber(scoreMin) : document.webL10n.get('no-value')
+				}) + '</p>';
+				html += '<p>' + document.webL10n.get('score-last', {
+					value: scoreLast ? App.formatNumber(scoreLast) : document.webL10n.get('no-value')
+				}) + '</p>';
+				html += '<p>' + document.webL10n.get('score-worst', {
+					value: scoreMax ? App.formatNumber(scoreMax) : document.webL10n.get('no-value')
+				}) + '</p>';
+				html += '<p>' + document.webL10n.get('score-average', {
+					value: scoreAvg ? App.formatNumber(scoreAvg, true) : document.webL10n.get('no-value')
+				}) + '</p>';
+			}
+			$('#score-' + code + ' .pack-end').html(html);
+		});
+		if (statsSize) {
+			overallScoreAvg = App.formatNumber(overallScoreAvg / statsSize, true);
+			overallScoreMin = App.formatNumber(overallScoreMin / statsSize, true);
+			overallScoreLast = App.formatNumber(overallScoreLast / statsSize, true);
+		}
 
-    return {
-        addCountryScore: addCountryScore,
-        isCountryValidated: isCountryValidated
-    };
-}
+		$('#stats-list-header h2').html(
+			document.webL10n.get('scores-by-country', {
+				nb: App.formatNumber(validatedCounter),
+				total: App.formatNumber(App.countries.length)
+			})
+		);
+		$('#overall-score-avg').html(overallScoreAvg ? overallScoreAvg : document.webL10n.get('no-value'));
+		$('#overall-score-min').html(overallScoreMin ? overallScoreMin : document.webL10n.get('no-value'));
+		$('#overall-score-last').html(overallScoreLast ? overallScoreLast : document.webL10n.get('no-value'));
+	}
+
+	init();
+
+	return {
+		addCountryScore: addCountryScore,
+		isCountryValidated: isCountryValidated
+	};
+};

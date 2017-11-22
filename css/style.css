@@ -1,10 +1,10 @@
 /*
  WorldMapSkiller
 
- written by Valéry Febvre
+ originally written by Valéry Febvre
  vfebvre@aester-eggs.com
 
- Copyright 2015 Valéry Febvre
+ Copyright 2015 Valéry Febvre, 2017 Michael M.
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Affero General Public License as
@@ -21,43 +21,43 @@
 */
 
 * {
-    font-family: FiraSans, sans-serif;
+	font-family: FiraSans, sans-serif;
 }
 
 .button {
-    border-radius: 3px !important;
+	border-radius: 3px !important;
 }
 
 .badge {
-    display: inline;
-    padding: 4px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #FFF;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25em;
-    background-color: #2ECC71;
+	display: inline;
+	padding: 4px;
+	font-size: 0.8rem;
+	font-weight: bold;
+	color: #FFF;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: 0.25em;
+	background-color: #2ECC71;
 }
 
 section[role="region"] header h2 {
-    padding: 0.8rem 1.5rem;
+	padding: 0.8rem 1.5rem;
 }
 section[role="region"] > header:first-child button {
-    font-style: normal;
+	font-style: normal;
 }
 
 .leaflet-container {
-    background: #C5EFF7 !important;
+	background: #C5EFF7 !important;
 }
 
 form[role="dialog"][data-type="confirm"] a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.6);
+	text-decoration: none;
+	color: rgba(255, 255, 255, 0.6);
 }
 form[role="dialog"][data-type="confirm"] ul {
-    border-top: none;
+	border-top: none;
 }
 
 /*
@@ -65,19 +65,19 @@ form[role="dialog"][data-type="confirm"] ul {
  */
 
 #splash-message {
-    position: absolute;
-    top: 5rem;
-    height: calc(100% - 9.5rem); /* line-height is missing here, it's calculated via Javascript */
-    width: 100%;
-    text-align: center;
-    background: rgba(200, 200, 200, 0.3);
+	position: absolute;
+	top: 5rem;
+	height: calc(100% - 9.5rem); /* line-height is missing here, it's calculated via Javascript */
+	width: 100%;
+	text-align: center;
+	background: rgba(200, 200, 200, 0.3);
 }
 #splash-message > span {
-    vertical-align: middle;
-    font-size: 4rem;
-    font-weight: bold;
-    display: inline-block;
-    line-height: normal;
+	vertical-align: middle;
+	font-size: 4rem;
+	font-weight: bold;
+	display: inline-block;
+	line-height: normal;
 }
 
 /*
@@ -85,71 +85,69 @@ form[role="dialog"][data-type="confirm"] ul {
  */
 
 .map-box {
-    display: none;
-    right: 0;
-    width: 100%;
-    position: absolute;
-    z-index: 2;
-    pointer-events: none;
+	display: none;
+	right: 0;
+	width: 100%;
+	position: absolute;
+	z-index: 2;
+	pointer-events: none;
 }
 .map-box > div {
-    position: relative;
-    padding: 4px 6px;
-    line-height: 2rem;
-    cursor: auto;
-    background: rgba(255, 255, 255, 0.7);
-    pointer-events: auto;
+	position: relative;
+	padding: 4px 6px;
+	line-height: 2rem;
+	cursor: auto;
+	background: rgba(255, 255, 255, 0.7);
+	pointer-events: auto;
 }
 
 #map-box-top {
-    top: 5em;
+	top: 5em;
 }
 #map-box-top > div {
-    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
 }
 #map-box-top .f32 {
-    float: right;
-}
-#map-box-top .f32 .flag {
-    vertical-align: middle;
+	float: right;
 }
 #map-box-top p {
-    font-size: 1rem;
-    line-height: 1.3rem;
-    margin: 2px;
+	font-size: 1rem;
+	line-height: 1.3rem;
+	margin: 2px;
 }
 
 #map-box-bottom {
-    bottom: 4.5em;
+	bottom: 4.5em;
 }
 #map-box-bottom > div {
-    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 #map-box-bottom .wrong {
-    background: rgba(255, 0, 0, 0.7);
+	background: rgba(255, 0, 0, 0.7);
 }
 
 /*
  * Toolbars
  */
 [role="toolbar"] {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.85);
-    border-top: none;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.85);
+	border-top: none;
 }
 [role="toolbar"] span {
-    flex: 1;
-    position: relative;
+	flex: 1;
+	position: relative;
 }
 
 /* adjust color, size and position of icomoon icons in toolbars */
 [role="toolbar"] button {
-    color: white;
+	color: white;
 }
-[role="toolbar"] [class^="icon-"], [role="toolbar"] [class*=" icon-"] {
-    font-size: 2rem !important;
+[role="toolbar"] [class^="icon-"],
+[role="toolbar"] [class*=" icon-"] {
+	font-size: 2rem !important;
 }
 
 /*
@@ -157,105 +155,102 @@ form[role="dialog"][data-type="confirm"] ul {
  */
 
 section[data-type="list"] li p:last-of-type {
-    font-size: 1rem;
+	font-size: 1rem;
 }
 section[data-type="list"] li aside.pack-start .f32,
 section[data-type="list"] li aside.pack-end span {
-    line-height: 6rem;
-}
-section[data-type="list"] li aside.pack-start .f32 .flag {
-    vertical-align: middle;
+	line-height: 6rem;
 }
 section[data-type="list"] aside.pack-end p {
-    font-size: 1rem;
-    padding: 0 0 0 1.5rem;
-    line-height: 1.5rem;
-    color: #333;
+	font-size: 1rem;
+	padding: 0 0 0 1.5rem;
+	line-height: 1.5rem;
+	color: #333;
 }
 section[data-type="list"] aside.pack-end span {
-    color: #2ECC71;
+	color: #2ECC71;
 }
 
 #stats-bar {
-    display: flex;
-    box-sizing: border-box;
-    width: 100%;
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
 }
 #stats-bar span {
-    position: relative;
-    flex: 1;
-    margin: 0 8px 0 0;
-    padding: 0;
-    text-align: center;
-    height: 100%;
-    font-weight: bold;
-    font-size: 3rem;
-    border: 1px #858585 solid;
-    color: #333;
+	position: relative;
+	flex: 1;
+	margin: 0 8px 0 0;
+	padding: 0;
+	text-align: center;
+	height: 100%;
+	font-weight: bold;
+	font-size: 3rem;
+	border: 1px #858585 solid;
+	color: #333;
 }
 #stats-bar span:last-of-type {
-    margin: 0;
+	margin: 0;
 }
 #stats-bar span .title {
-    background: #858585;
-    color: #fff;
-    font-size: 1rem;
-    line-height: 2rem;
+	background: #858585;
+	color: #fff;
+	font-size: 1rem;
+	line-height: 2rem;
 }
 
 #stats-bar-help p {
-    font-size: 1rem;
-    line-height: 1rem;
+	font-size: 1rem;
+	line-height: 1rem;
 }
 
 .dependent {
-    background-color: #eee;
+	background-color: #eee;
 }
 
 /*
  * Pages animations
  */
 [data-position="right"] {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    -webkit-transform: translateX(100%);
-    transform: translateX(100%);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	-webkit-transform: translateX(100%);
+	transform: translateX(100%);
 }
 
 [data-position="left"] {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	-webkit-transform: translateX(-100%);
+	transform: translateX(-100%);
 }
 
 .leftToCurrent {
-    -webkit-animation: leftToCurrent 0.4s forwards;
-    animation: leftToCurrent 0.4s forwards;
+	-webkit-animation: leftToCurrent 0.4s forwards;
+	animation: leftToCurrent 0.4s forwards;
 }
 .currentToLeft {
-    -webkit-animation: currentToLeft 0.4s forwards;
-    animation: currentToLeft 0.4s forwards;
+	-webkit-animation: currentToLeft 0.4s forwards;
+	animation: currentToLeft 0.4s forwards;
 }
 .rightToCurrent {
-    -webkit-animation: rightToCurrent 0.4s forwards;
-    animation: rightToCurrent 0.4s forwards;
+	-webkit-animation: rightToCurrent 0.4s forwards;
+	animation: rightToCurrent 0.4s forwards;
 }
 .currentToRight {
-    -webkit-animation: currentToRight 0.4s forwards;
-    animation: currentToRight 0.4s forwards;
+	-webkit-animation: currentToRight 0.4s forwards;
+	animation: currentToRight 0.4s forwards;
 }
 .show {
-    -webkit-animation: show 0.4s forwards;
-    animation: show 0.4s forwards;
+	-webkit-animation: show 0.4s forwards;
+	animation: show 0.4s forwards;
 }
 .hide {
-    -webkit-animation: hide 0.4s forwards;
-    animation: hide 0.4s forwards;
+	-webkit-animation: hide 0.4s forwards;
+	animation: hide 0.4s forwards;
 }

@@ -1,10 +1,10 @@
 /**
  * WorldMapSkiller
  *
- * written by Valéry Febvre
+ * originally written by Valéry Febvre
  * vfebvre@aester-eggs.com
  *
- * Copyright 2015 Valéry Febvre
+ * Copyright 2015 Valéry Febvre, 2017 Michael M.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,398 +20,382 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function WorldMap() {
-    var $page = $('#world-map');
-    var $mapBoxTop = $('#map-box-top', $page).hide();
-    var $mapBoxTopContent = $('div', $mapBoxTop);
-    var $mapBoxBottom = $('#map-box-bottom', $page).hide();
-    var $mapBoxBottomContent = $('div', $mapBoxBottom);
+/*global App, $, L*/
+/*jshint camelcase: false*/
+//jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
-    var started = false;
+App.WorldMap = function () {
+	"use strict";
 
-    var drawPile;
-    var question;
-    var clickLock = false;
-    var validatedCounter;
+	var $mapBoxTop = $('#map-box-top').hide(),
+		$mapBoxTopContent = $mapBoxTop.find('div'),
+		$mapBoxBottom = $('#map-box-bottom').hide(),
+		$mapBoxBottomContent = $mapBoxBottom.find('div'),
 
-    var map;
-    var mainLayer;
-    var countriesLayers = [];
-    var highlightedCountryLayer;
-    var colors = [ // http://www.flatuicolorpicker.com/
-        '#E74C3C', // ALIZARIN: India, Australia
-        '#E26A6A', // SUNGLO: Russia
-        '#2ECC71', // EMERALD: Argentina, Mongolia
-        '#95A5A6', // CONCRETE: USA, China, Greenland, Antartica
-        '#F1C40F', // SUN FLOWER: Brazil, Algeria
-        '#E67E22', // CARROT: Canada, Mexico
-        '#4183D7'  // ROYAL BLUE: France
-    ];
+		started = false,
 
-    var animations = [
-        'bounceInDown',
-        'lightSpeedIn',
-        'tada',
-        'rubberBand',
-        'flip',
-        'rotateIn',
-        'zoomInDown'
-    ];
+		drawPile,
+		question,
+		clickLock = false,
+		validatedCounter,
 
-    function init() {
-        // toolbar buttons
-        $('#btn-start', $page).on('click', function(e) {
-            startOrStop();
-        });
-        $('#btn-next', $page).on('click', function(e) {
-            drawQuestion();
-        });
-        $('#btn-reset-map-view', $page).on('click', function(e) {
-            resetMapView();
-        });
+		map,
+		mainLayer,
+		countriesLayers = [],
+		highlightedCountryLayer,
+		colors = [ //http://www.flatuicolorpicker.com/
+			'#E74C3C', //ALIZARIN: India, Australia
+			'#E26A6A', //SUNGLO: Russia
+			'#2ECC71', //EMERALD: Argentina, Mongolia
+			'#95A5A6', //CONCRETE: USA, China, Greenland, Antartica
+			'#F1C40F', //SUN FLOWER: Brazil, Algeria
+			'#E67E22', //CARROT: Canada, Mexico
+			'#4183D7' //ROYAL BLUE: France
+		];
 
-        // init map
-        $('#map', $page)
-            .width(window.innerWidth)
-            .height(window.innerHeight);
+	function init () {
+		//toolbar buttons
+		$('#btn-start').on('click', function () {
+			startOrStop();
+		});
+		$('#btn-next').on('click', function () {
+			drawQuestion();
+		});
+		$('#btn-reset-map-view').on('click', function () {
+			resetMapView();
+		});
 
-        map = L.map(
-            'map',
-            {zoomControl: false, attributionControl: false,
-                worldCopyJump: false, maxBoundsViscosity: 0.5,
-                minZoom: 1, maxZoom: 8} // TODO maxBounds: [[-180, 100], [210, -90]], update leaflet library first
-        );
-        map.doubleClickZoom.disable();
+		//init map
+		$('#map')
+			.width(window.innerWidth)
+			.height(window.innerHeight);
 
-        mainLayer = L.geoJson(
-            App.countries,
-            // NOTE the alphabetical order by code coincides with the desired order for overlapping countries
-            {
-                style: function(feature) {
-                    return {
-                        color: 'white',
-                        fillColor: feature.properties.mapcolor7 ? colors[feature.properties.mapcolor7 - 1] : '#e2f7fb',
-                        fillOpacity: feature.properties.mapcolor7 ? 1 : 0.5,
-                        opacity: 1,
-                        weight: 1,
-                        stroke: !!feature.properties.mapcolor7
-                    };
-                },
-                onEachFeature: function(feature, layer) {
-                    countriesLayers[feature.properties.gu_a3] = layer;
-                    layer.on({
-                        click: function(e) {
-                            if (clickLock) {
-                                return;
-                            }
-                            clickLock = true;
+/*
+NOTE: We still use leaflet 0.7.3. Updating to 0.7.7 is possible, but
+has a slightly degraded performance for me when zooming in.
+Updating to the current branch requires some more work, including
+some fiddling with z-index. Since neither version offers apparent
+advantages over the old one, let's stay with it for now.
+*/
+		map = L.map(
+			'map',
+			{
+				//preferCanvas: true, 0.7.x uses global instead
+				zoomControl: false, attributionControl: false,
+				worldCopyJump: false,
+				//maxBounds: [[-180, 120], [210, -90]], maxBoundsViscosity: 0.5, doesn't work properly
+				minZoom: 1, maxZoom: 8
+			}
+		);
+		map.doubleClickZoom.disable();
 
-                            selectCountry(e);
+		mainLayer = L.geoJson(
+			App.countries,
+			//NOTE the alphabetical order by code coincides with the desired order for overlapping countries
+			{
+				style: function (feature) {
+					return {
+						color: 'white',
+						fillColor: feature.properties.mapcolor7 ? colors[feature.properties.mapcolor7 - 1] : '#e2f7fb',
+						fillOpacity: feature.properties.mapcolor7 ? 1 : 0.5,
+						opacity: 1,
+						weight: 1,
+						stroke: !!feature.properties.mapcolor7
+					};
+				},
+				onEachFeature: function (feature, layer) {
+					countriesLayers[feature.properties.gu_a3] = layer;
+					layer.on({
+						click: function (e) {
+							if (clickLock) {
+								return;
+							}
 
-                            window.setTimeout(function() {
-                                clickLock = false;
-                            }, 100);
-                        }
-                    });
-                }
-            }
-        ).addTo(map);
+							selectCountry(e);
 
-        resetMapView();
-    }
+							clickLock = true;
+							window.setTimeout(function () {
+								clickLock = false;
+							}, 100);
+						}
+					});
+				}
+			}
+		).addTo(map);
 
-    function formatIs(data) {
-        var msg = 'is';
-        if (data.isVariant) {
-            msg += '-v' + data.isVariant;
-        }
-        return document.webL10n.get(msg, {name: data.grammarVariant || data.name});
-    }
+		resetMapView();
+	}
 
-    function checkAnswer(layer) {
-        var min = Infinity;
-        var distance;
-        var correct;
-        var stats;
+	function formatIs (data) {
+		var msg = 'is';
+		if (data.isVariant) {
+			msg += '-v' + data.isVariant;
+		}
+		return document.webL10n.get(msg, {name: data.grammarVariant || data.name});
+	}
 
-        if (question.code === layer.feature.properties.gu_a3) {
-            distance = 0;
-            correct = true;
-        }
-        else {
-            // compute minimal distance between 2 polygons
-            $.each(getCountryBiggestPolygon(countriesLayers[question.code])._latlngs, function(i, latlng1) {
-                $.each(getCountryBiggestPolygon(layer)._latlngs, function(j, latlng2) {
-                    if (latlng1.distanceTo(latlng2) < min) {
-                        min = latlng1.distanceTo(latlng2);
-                    }
-                });
-            });
-            distance = min / 1000;
-            correct = false;
-        }
+	function flatten (array) {
+		return Array.isArray(array[0]) ? array.reduce(function (a, b) {
+			return a.concat(flatten(b));
+		}, []) : array;
+	}
 
-        return {
-            correct: correct,
-            distance: distance
-        };
-    }
+	function calcDistance (poly1, poly2) {
+		var coords1 = flatten(poly1.getLatLngs()), coords2 = flatten(poly2.getLatLngs()), min = Infinity;
+		coords1.forEach(function (latlng1) {
+			coords2.forEach(function (latlng2) {
+				var dist = latlng1.distanceTo(latlng2);
+				if (dist < min) {
+					min = dist;
+				}
+			});
+		});
+		return min;
+	}
 
-    function drawQuestion() {
-        var rnd;
-        var index;
-        var country;
-        var message;
+	function checkAnswer (layer) {
+		var distance, correct;
 
-        resetMapView();
+		if (question.code === layer.feature.properties.gu_a3) {
+			distance = 0;
+			correct = true;
+		} else {
+			distance = calcDistance(countriesLayers[question.code], layer) / 1000;
+			correct = false;
+		}
 
-        if (endOfMission()) {
-            return;
-        }
-        if (endOfPile()) {
-            return;
-        }
+		return {
+			correct: correct,
+			distance: distance
+		};
+	}
 
-        rnd = Math.floor(Math.random() * drawPile.length);
-        index = drawPile.splice(rnd, 1);
-        country = App.countries[index];
+	function showMapBoxTop (message) {
+		$mapBoxTopContent.html(message);
+		$mapBoxTop.show();
+	}
 
-        question = App.getCountryInfo(country.properties);
-        question.tries = 0;
+	function hideMapBoxTop () {
+		$mapBoxTop.hide();
+		$mapBoxTopContent.empty();
+	}
 
-        message = '';
-        if (App.store.settings.flag) {
-            message += App.formatFlag(question.flag);
-        }
-        message += '<p>';
-        if (App.store.settings.name) {
-            message += document.webL10n.get('where-is-country', {is: formatIs(question)});
-        } else if (App.store.settings.capital) {
-            message += document.webL10n.get('where-is-country-capital', {capital: question.capital});
-        } else if (App.store.settings.flag) {
-            message += document.webL10n.get('where-is-country-flag');
-        } else {
-            message += document.webL10n.get('where-is-country-none');
-        }
-        message += '<br>';
-        if (App.store.settings.details) {
-            message += question.continent + ', ' + question.population;
-            if (App.store.settings.capital && App.store.settings.name) {
-                message += ', ' + document.webL10n.get('capital', {capital: question.capital});
-            }
-        } else if (App.store.settings.capital && App.store.settings.name) {
-            message += document.webL10n.get('capital', {capital: question.capital})
-        } else {
-            message += '&nbsp;';
-        }
-        message += '</p>';
+	function showMapBoxBottom (message, classes) {
+		$mapBoxBottomContent.removeClass();
+		if (classes) {
+			$mapBoxBottomContent.addClass(classes);
+		}
+		$mapBoxBottomContent.html(message);
+		$mapBoxBottom.show();
+	}
 
-        showMapBoxTop(message);
-        hideMapBoxBottom();
-    }
+	function hideMapBoxBottom () {
+		$mapBoxBottom.hide();
+		$mapBoxBottomContent.removeClass().empty();
+	}
 
-    function endOfPile() {
-        var message;
-        if (drawPile && drawPile.length === 0) {
-            startOrStop();
+	function resetMapView () {
+		map.setView([48.48, 2.2], 1);
+	}
 
-            message = document.webL10n.get('end-of-countries', {icon: '<span class="icon-play-arrow"></span>'});
-            showMapBoxTop(message);
+	function endOfPile () {
+		var message;
+		if (drawPile && drawPile.length === 0) {
+			startOrStop();
+			message = document.webL10n.get('end-of-countries', {icon: '<span class="icon-play-arrow"></span>'});
+			showMapBoxTop(message);
+			return true;
+		}
+		return false;
+	}
 
-            return true;
-        }
-        return false;
-    }
+	function endOfMission () {
+		var message;
+		if (validatedCounter === App.countries.length) { //TODO - shouldOmit
+			startOrStop();
+			message = '<p>' + document.webL10n.get('end-of-mission-1') + '</p>';
+			message += '<p>' + document.webL10n.get('end-of-mission-2') + '</p>';
+			message += '<p>' + document.webL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
+			showMapBoxTop(message);
+			return true;
+		}
+		return false;
+	}
 
-    function endOfMission() {
-        var message;
+	function startOrStop () {
+		var message;
 
-        if (validatedCounter === App.countries.length) { // TODO - shouldOmit
-            startOrStop();
+		drawPile = [];
+		validatedCounter = 0;
+		$.each(App.countries, function (id, country) {
+			if (App.stats.isCountryValidated(country.properties.gu_a3)) {
+				validatedCounter += 1;
+			} else { //TODO if (!shouldOmit)
+				drawPile.push(id);
+			}
+		});
 
-            message = '<p>' + document.webL10n.get('end-of-mission-1') + '</p>';
-            message += '<p>' + document.webL10n.get('end-of-mission-2') + '</p>';
-            message += '<p>' + document.webL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
-            showMapBoxTop(message);
+		if (!started) {
+			started = true;
+			unselectCountry();
 
-            return true;
-        }
-        return false;
-    }
+			if (endOfMission()) {
+				return;
+			} else {
+				$('#btn-start').removeClass('icon-play-arrow').addClass('icon-stop');
+				$('#btn-next').css('visibility', 'visible');
 
-    function getCountryBiggestPolygon(layer) {
-        var biggest;
+				message = document.webL10n.get('start-splash-1');
+				if (validatedCounter > 0) {
+					message += '<br>';
+					message += document.webL10n.get('start-splash-2', {nb: drawPile.length});
+				}
+				App.showSplashMessage(message, 'zoomInDown', drawQuestion);
+			}
+		} else {
+			started = false;
 
-        if (layer instanceof L.MultiPolygon) {
-            // find biggest polygon
-            $.each(layer._layers, function(i, sublayer) {
-                if (!biggest || sublayer._latlngs.length > biggest._latlngs.length) {
-                    biggest = sublayer;
-                }
-            });
-        }
-        else {
-            biggest = layer;
-        }
+			$('#btn-start').removeClass('icon-stop').addClass('icon-play-arrow');
+			$('#btn-next').css('visibility', 'hidden');
 
-        return biggest;
-    }
+			drawPile = null;
 
-    function hideMapBoxBottom() {
-        $mapBoxBottom.hide();
-        $mapBoxBottomContent.removeClass().empty();
-    }
+			hideMapBoxTop();
+			hideMapBoxBottom();
+		}
+	}
 
-    function hideMapBoxTop() {
-        $mapBoxTop.hide();
-        $mapBoxTopContent.empty();
-    }
+	function drawQuestion () {
+		var rnd, index, country, message = '';
 
-    function resetMapView() {
-        map.setView([48.48, 2.2], 1);
-    }
+		resetMapView();
 
-    function selectCountry(e) {
-        var info;
-        var result;
-        var message;
-        var validated;
+		if (endOfMission()) {
+			return;
+		}
+		if (endOfPile()) {
+			return;
+		}
 
-        if (highlightedCountryLayer && highlightedCountryLayer.feature.properties.gu_a3 === e.target.feature.properties.gu_a3) {
-            return;
-        }
+		rnd = Math.floor(Math.random() * drawPile.length);
+		index = drawPile.splice(rnd, 1);
+		country = App.countries[index];
 
-        unselectCountry();
-        highlightedCountryLayer = e.target;
-        highlightedCountryLayer.setStyle({
-            fillColor: '#22313F'
-        });
+		question = App.getCountryInfo(country.properties);
+		question.tries = 0;
 
-        info = App.getCountryInfo(highlightedCountryLayer.feature.properties);
-        if (!started) {
-            message = App.formatFlag(info.flag);
-            message += '<p><b>' + info.name + '</b><br>';
-            message += info.continent + ', ' +
-                info.population + ', ' +
-                document.webL10n.get('capital', {capital: info.capital});
-            message += '</p>';
+		if (App.store.settings.flag) {
+			message += App.formatFlag(question.flag);
+		}
+		message += '<p>';
+		if (App.store.settings.name) {
+			message += document.webL10n.get('where-is-country', {is: formatIs(question)});
+		} else if (App.store.settings.capital) {
+			message += document.webL10n.get('where-is-country-capital', {capital: question.capital});
+		} else if (App.store.settings.flag) {
+			message += document.webL10n.get('where-is-country-flag');
+		} else {
+			message += document.webL10n.get('where-is-country-none');
+		}
+		message += '<br>';
+		if (App.store.settings.details) {
+			message += question.continent + ', ' + question.population;
+			if (App.store.settings.capital && App.store.settings.name) {
+				message += ', ' + document.webL10n.get('capital', {capital: question.capital});
+			}
+		} else if (App.store.settings.capital && App.store.settings.name) {
+			message += document.webL10n.get('capital', {capital: question.capital});
+		} else {
+			message += '&nbsp;';
+		}
+		message += '</p>';
 
-            showMapBoxTop(message);
-            return;
-        }
+		showMapBoxTop(message);
+		hideMapBoxBottom();
+	}
 
-        question.tries += 1;
-        result = checkAnswer(highlightedCountryLayer);
-        if (result.correct) {
-            App.stats.addCountryScore(question.code, question.tries);
-            validated = App.stats.isCountryValidated(question.code);
+	function selectCountry (e) {
+		var info,
+			result,
+			message,
+			validated;
 
-            message = document.webL10n.get('answer-right', {tries: question.tries});
-            if (validated) {
-                validatedCounter += 1;
-                message += ' <span class="badge">';
-                message += '<span class="icon-checkmark"></span> ';
-                message += document.webL10n.get('validated');
-                message += '</span>';
-            }
-            showMapBoxBottom(message);
+		if (
+			highlightedCountryLayer &&
+			highlightedCountryLayer.feature.properties.gu_a3 === e.target.feature.properties.gu_a3
+		) {
+			return;
+		}
 
-            message = document.webL10n.get(validated ? 'answer-right-splash-validated' : 'answer-right-splash');
-            App.showSplashMessage(message, null, drawQuestion);
-        }
-        else {
-            if (result.distance <= 100) {
-                message = document.webL10n.get('answer-wrong-1-close');
-            }
-            else {
-                message = document.webL10n.get('answer-wrong-1-far', {distance: App.formatNumber(result.distance)});
-            }
-            message += ' ';
-            if (App.store.settings.name) {
-                message += document.webL10n.get('answer-wrong-2', {is: formatIs(info)});
-            } else if (App.store.settings.capital) {
-                message += document.webL10n.get('answer-wrong-2-capital', {is: formatIs(info), capital: info.capital});
-            } else if (App.store.settings.flag) {
-                message += document.webL10n.get('answer-wrong-2-flag', {
-                    is: formatIs(info),
-                    flag: App.formatFlag(info.flag, true)
-                });
-            } else {
-                message += document.webL10n.get('answer-wrong-2-none', {is: formatIs(info)});
-            }
-            showMapBoxBottom(message, 'wrong');
-        }
-    }
+		unselectCountry();
+		highlightedCountryLayer = e.target;
+		highlightedCountryLayer.setStyle({
+			fillColor: '#22313F'
+		});
 
-    function showMapBoxBottom(message, classes) {
-        $mapBoxBottomContent.removeClass();
-        if (classes) {
-            $mapBoxBottomContent.addClass(classes);
-        }
-        $mapBoxBottomContent.html(message);
-        $mapBoxBottom.show();
-    }
+		info = App.getCountryInfo(highlightedCountryLayer.feature.properties);
+		if (!started) {
+			message = App.formatFlag(info.flag);
+			message += '<p><b>' + info.name + '</b><br>';
+			message += info.continent + ', ' +
+				info.population + ', ' +
+				document.webL10n.get('capital', {capital: info.capital});
+			message += '</p>';
 
-    function showMapBoxTop(message) {
-        $mapBoxTopContent.html(message);
-        $mapBoxTop.show();
-    }
+			showMapBoxTop(message);
+			return;
+		}
 
-    function startOrStop() {
-        var message;
+		question.tries += 1;
+		result = checkAnswer(highlightedCountryLayer);
+		if (result.correct) {
+			App.stats.addCountryScore(question.code, question.tries);
+			validated = App.stats.isCountryValidated(question.code);
 
-        drawPile = [];
-        validatedCounter = 0;
-        $.each(App.countries, function(id, country) {
-            if (App.stats.isCountryValidated(country.properties.gu_a3)) {
-                validatedCounter += 1;
-            }
-            else { // TODO if (!shouldOmit)
-                drawPile.push(id);
-            }
-        });
+			message = document.webL10n.get(App.store.settings.name ? 'answer-right' : 'answer-right-country',
+				{country: question.name, tries: question.tries});
+			if (validated) {
+				validatedCounter += 1;
+				message += ' <span class="badge">';
+				message += '<span class="icon-checkmark"></span> ';
+				message += document.webL10n.get('validated');
+				message += '</span>';
+			}
+			showMapBoxBottom(message);
 
-        if (!started) {
-            started = true;
-            unselectCountry();
+			message = document.webL10n.get(validated ? 'answer-right-splash-validated' : 'answer-right-splash');
+			App.showSplashMessage(message, null, drawQuestion);
+		} else {
+			if (result.distance <= 100) {
+				message = document.webL10n.get('answer-wrong-1-close');
+			} else {
+				message = document.webL10n.get('answer-wrong-1-far', {distance: App.formatNumber(result.distance)});
+			}
+			message += ' ';
+			if (App.store.settings.name) {
+				message += document.webL10n.get('answer-wrong-2', {is: formatIs(info)});
+			} else if (App.store.settings.capital) {
+				message += document.webL10n.get('answer-wrong-2-capital', {is: formatIs(info), capital: info.capital});
+			} else if (App.store.settings.flag) {
+				message += document.webL10n.get('answer-wrong-2-flag', {
+					is: formatIs(info),
+					flag: App.formatFlag(info.flag)
+				});
+			} else {
+				message += document.webL10n.get('answer-wrong-2-none', {is: formatIs(info)});
+			}
+			showMapBoxBottom(message, 'wrong');
+		}
+	}
 
-            if (endOfMission()) {
-                return;
-            }
-            else {
-                $('#btn-start').removeClass('icon-play-arrow').addClass('icon-stop');
-                $('#btn-next').css('visibility', 'visible');
+	function unselectCountry () {
+		if (highlightedCountryLayer) {
+			mainLayer.resetStyle(highlightedCountryLayer);
+			highlightedCountryLayer = null;
+		}
+	}
 
-                message = document.webL10n.get('start-splash-1');
-                if (validatedCounter > 0) {
-                    message += '<br>';
-                    message += document.webL10n.get('start-splash-2', {nb: drawPile.length});
-                }
-                App.showSplashMessage(message, 'zoomInDown', drawQuestion);
-            }
-        }
-        else {
-            started = false;
+	init();
 
-            $('#btn-start').removeClass('icon-stop').addClass('icon-play-arrow');
-            $('#btn-next').css('visibility', 'hidden');
-
-            drawPile = null;
-
-            hideMapBoxTop();
-            hideMapBoxBottom();
-        }
-    }
-
-    function unselectCountry() {
-        if (highlightedCountryLayer) {
-            mainLayer.resetStyle(highlightedCountryLayer);
-            highlightedCountryLayer = null;
-        }
-    }
-
-    init();
-
-    return {
-    };
-}
+	return {};
+};

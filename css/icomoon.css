@@ -1,0 +1,56 @@
+@font-face {
+	font-family: 'icomoon';
+	src: url('icomoon.woff'); /* WOFF is enough, browsers without support don't work anyway*/
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-open-with:before {
+	content: "\e600";
+}
+.icon-play-arrow:before {
+	content: "\e601";
+}
+.icon-stop:before {
+	content: "\e602";
+}
+.icon-gps-fixed:before {
+	content: "\e604";
+}
+.icon-navigate-next:before {
+	content: "\e607";
+}
+.icon-stats2:before {
+	content: "\e603";
+}
+.icon-info:before {
+	content: "\ea0c";
+}
+.icon-checkmark:before {
+	content: "\ea10";
+}
+.icon-bug:before {
+	content: "\e999";
+}
+.icon-star-empty:before {
+	content: "\e9d7";
+}
+.icon-embed2:before {
+	content: "\ea80";
+}
+
