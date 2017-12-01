@@ -69,8 +69,8 @@ App.Stats = function () {
 				'</aside>',
 				'<aside class="pack-end">',
 				'</aside>',
-				'<p style="padding-top: 0.5rem;">' + info.nameSimple + '</p>', //TODO move to stylesheet
-				'<p style="line-height: 1.3rem;">',
+				'<p>' + info.nameSimple + '</p>',
+				'<p>',
 				info.continent,
 				'<br>',
 				info.population,

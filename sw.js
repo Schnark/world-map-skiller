@@ -2,17 +2,11 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v3.1',
+var VERSION = 'v3.2',
 	FILES = [
 		'index.html',
-		'css/bb/transitions.css',
-		'css/bb/util.css',
-		'css/bb/style/buttons.css',
-		'css/bb/style/confirm.css',
-		'css/bb/style/headers.css',
-		'css/bb/style/lists.css',
-		'css/bb/style/toolbars.css',
-		'css/bb/style/headers/images/icons/organic/back.png',
+		'css/back.png',
+		'css/bb.css',
 		'css/flags.css',
 		'css/flags.png',
 		'css/icomoon.css',

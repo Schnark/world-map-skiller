@@ -187,7 +187,7 @@ var App = {
 		App.$splashMessageContent
 			.removeClass()
 			.addClass(animation + ' animated')
-			.one('webkitAnimationEnd oAnimationEnd animationend', function () {
+			.one('webkitAnimationEnd animationend', function () {
 				window.setTimeout(function () {
 					App.hideSplashMessage();
 					if (animationendCb) {

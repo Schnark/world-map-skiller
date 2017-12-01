@@ -20,12 +20,22 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-* {
-	font-family: FiraSans, sans-serif;
+/* Messages */
+#splash-message {
+	position: absolute;
+	top: 5rem;
+	height: calc(100% - 9.5rem); /* line-height is missing here, it's calculated via Javascript */
+	width: 100%;
+	text-align: center;
+	background: rgba(200, 200, 200, 0.3);
 }
 
-.button {
-	border-radius: 3px !important;
+#splash-message > span {
+	vertical-align: middle;
+	font-size: 4rem;
+	font-weight: bold;
+	display: inline-block;
+	line-height: normal;
 }
 
 .badge {
@@ -41,48 +51,10 @@
 	background-color: #2ECC71;
 }
 
-section[role="region"] header h2 {
-	padding: 0.8rem 1.5rem;
-}
-section[role="region"] > header:first-child button {
-	font-style: normal;
-}
-
+/* Map boxes and overlay */
 .leaflet-container {
 	background: #C5EFF7 !important;
 }
-
-form[role="dialog"][data-type="confirm"] a {
-	text-decoration: none;
-	color: rgba(255, 255, 255, 0.6);
-}
-form[role="dialog"][data-type="confirm"] ul {
-	border-top: none;
-}
-
-/*
- * Splash message
- */
-
-#splash-message {
-	position: absolute;
-	top: 5rem;
-	height: calc(100% - 9.5rem); /* line-height is missing here, it's calculated via Javascript */
-	width: 100%;
-	text-align: center;
-	background: rgba(200, 200, 200, 0.3);
-}
-#splash-message > span {
-	vertical-align: middle;
-	font-size: 4rem;
-	font-weight: bold;
-	display: inline-block;
-	line-height: normal;
-}
-
-/*
- * Map boxes and overlay
- */
 
 .map-box {
 	display: none;
@@ -92,6 +64,7 @@ form[role="dialog"][data-type="confirm"] ul {
 	z-index: 2;
 	pointer-events: none;
 }
+
 .map-box > div {
 	position: relative;
 	padding: 4px 6px;
@@ -104,12 +77,15 @@ form[role="dialog"][data-type="confirm"] ul {
 #map-box-top {
 	top: 5em;
 }
+
 #map-box-top > div {
 	box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
 }
+
 #map-box-top .f32 {
 	float: right;
 }
+
 #map-box-top p {
 	font-size: 1rem;
 	line-height: 1.3rem;
@@ -119,63 +95,22 @@ form[role="dialog"][data-type="confirm"] ul {
 #map-box-bottom {
 	bottom: 4.5em;
 }
+
 #map-box-bottom > div {
 	box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
 }
+
 #map-box-bottom .wrong {
 	background: rgba(255, 0, 0, 0.7);
 }
 
-/*
- * Toolbars
- */
-[role="toolbar"] {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	background: rgba(0, 0, 0, 0.85);
-	border-top: none;
-}
-[role="toolbar"] span {
-	flex: 1;
-	position: relative;
-}
-
-/* adjust color, size and position of icomoon icons in toolbars */
-[role="toolbar"] button {
-	color: white;
-}
-[role="toolbar"] [class^="icon-"],
-[role="toolbar"] [class*=" icon-"] {
-	font-size: 2rem !important;
-}
-
-/*
- * Stats
- */
-
-section[data-type="list"] li p:last-of-type {
-	font-size: 1rem;
-}
-section[data-type="list"] li aside.pack-start .f32,
-section[data-type="list"] li aside.pack-end span {
-	line-height: 6rem;
-}
-section[data-type="list"] aside.pack-end p {
-	font-size: 1rem;
-	padding: 0 0 0 1.5rem;
-	line-height: 1.5rem;
-	color: #333;
-}
-section[data-type="list"] aside.pack-end span {
-	color: #2ECC71;
-}
-
+/* Stats */
 #stats-bar {
 	display: flex;
 	box-sizing: border-box;
 	width: 100%;
 }
+
 #stats-bar span {
 	position: relative;
 	flex: 1;
@@ -188,9 +123,11 @@ section[data-type="list"] aside.pack-end span {
 	border: 1px #858585 solid;
 	color: #333;
 }
+
 #stats-bar span:last-of-type {
 	margin: 0;
 }
+
 #stats-bar span .title {
 	background: #858585;
 	color: #fff;
@@ -207,50 +144,37 @@ section[data-type="list"] aside.pack-end span {
 	background-color: #eee;
 }
 
-/*
- * Pages animations
- */
-[data-position="right"] {
+/* Checkboxes */
+[type="checkbox"] {
 	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	-webkit-transform: translateX(100%);
-	transform: translateX(100%);
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	width: 1px;
+	margin: -1px;
+	padding: 0;
+	border: 0;
 }
 
-[data-position="left"] {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	-webkit-transform: translateX(-100%);
-	transform: translateX(-100%);
+[type="checkbox"] + span::before {
+	content: "";
+	display: inline-block;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 1.2em;
+	height: 1.2em;
+	border: 1px solid;
+	border-radius: 5px;
+	vertical-align: middle;
+	text-align: center;
+	line-height: 1;
+	margin-right: 0.5em;
 }
 
-.leftToCurrent {
-	-webkit-animation: leftToCurrent 0.4s forwards;
-	animation: leftToCurrent 0.4s forwards;
+[type="checkbox"]:checked + span::before {
+	content: "✓";
 }
-.currentToLeft {
-	-webkit-animation: currentToLeft 0.4s forwards;
-	animation: currentToLeft 0.4s forwards;
-}
-.rightToCurrent {
-	-webkit-animation: rightToCurrent 0.4s forwards;
-	animation: rightToCurrent 0.4s forwards;
-}
-.currentToRight {
-	-webkit-animation: currentToRight 0.4s forwards;
-	animation: currentToRight 0.4s forwards;
-}
-.show {
-	-webkit-animation: show 0.4s forwards;
-	animation: show 0.4s forwards;
-}
-.hide {
-	-webkit-animation: hide 0.4s forwards;
-	animation: hide 0.4s forwards;
+
+[type="checkbox"]:focus + span::before {
+	outline: 1px dotted;
 }
