@@ -37,7 +37,9 @@ App.WorldMap = function () {
 		drawPile,
 		question,
 		clickLock = false,
-		validatedCounter,
+		currentValidatedCounter,
+		totalValidatedCounter,
+		currentCounter,
 
 		map,
 		mainLayer,
@@ -134,6 +136,17 @@ advantages over the old one, let's stay with it for now.
 		return document.webL10n.get(msg, {name: data.grammarVariant || data.name});
 	}
 
+	function shouldInclude (country) {
+		var group = App.store.settings.group;
+		if (!group) {
+			return true;
+		}
+		if (group === 'un') { //UN members + Vatican
+			return !(country.dependent || country.disputed);
+		}
+		return country.continent.replace(/.* /, '') === group;
+	}
+
 	function flatten (array) {
 		return Array.isArray(array[0]) ? array.reduce(function (a, b) {
 			return a.concat(flatten(b));
@@ -210,12 +223,19 @@ advantages over the old one, let's stay with it for now.
 	}
 
 	function endOfMission () {
-		var message;
-		if (validatedCounter === App.countries.length) { //TODO - shouldOmit
+		var allDone = totalValidatedCounter === App.countries.length,
+			currentDone = currentValidatedCounter === currentCounter,
+			message;
+		if (allDone || currentDone) {
 			startOrStop();
 			message = '<p>' + document.webL10n.get('end-of-mission-1') + '</p>';
-			message += '<p>' + document.webL10n.get('end-of-mission-2') + '</p>';
-			message += '<p>' + document.webL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
+			if (allDone) {
+				message += '<p>' + document.webL10n.get('end-of-mission-2') + '</p>';
+				message += '<p>' + document.webL10n.get('end-of-mission-3', {icon: '<span class="icon-stats2"></span>'}) + '</p>';
+			} else {
+				message += '<p>' + document.webL10n.get('end-of-mission-4') + '</p>';
+				message += '<p>' + document.webL10n.get('end-of-mission-5', {icon: '<span class="icon-info"></span>'}) + '</p>';
+			}
 			showMapBoxTop(message);
 			return true;
 		}
@@ -225,17 +245,26 @@ advantages over the old one, let's stay with it for now.
 	function startOrStop () {
 		var message;
 
-		drawPile = [];
-		validatedCounter = 0;
-		$.each(App.countries, function (id, country) {
-			if (App.stats.isCountryValidated(country.properties.gu_a3)) {
-				validatedCounter += 1;
-			} else { //TODO if (!shouldOmit)
-				drawPile.push(id);
-			}
-		});
-
 		if (!started) {
+			drawPile = [];
+			currentValidatedCounter = 0;
+			totalValidatedCounter = 0;
+			currentCounter = 0;
+			$.each(App.countries, function (id, country) {
+				var include = shouldInclude(country.properties);
+				if (App.stats.isCountryValidated(country.properties.gu_a3)) {
+					totalValidatedCounter++;
+					if (include) {
+						currentValidatedCounter++;
+						currentCounter++;
+					}
+				} else {
+					if (include) {
+						drawPile.push(id);
+						currentCounter++;
+					}
+				}
+			});
 			started = true;
 			unselectCountry();
 
@@ -246,19 +275,18 @@ advantages over the old one, let's stay with it for now.
 				$('#btn-next').css('visibility', 'visible');
 
 				message = document.webL10n.get('start-splash-1');
-				if (validatedCounter > 0) {
+				if (currentValidatedCounter > 0) {
 					message += '<br>';
 					message += document.webL10n.get('start-splash-2', {nb: drawPile.length});
 				}
 				App.showSplashMessage(message, 'zoomInDown', drawQuestion);
 			}
 		} else {
+			drawPile = null;
 			started = false;
 
 			$('#btn-start').removeClass('icon-stop').addClass('icon-play-arrow');
 			$('#btn-next').css('visibility', 'hidden');
-
-			drawPile = null;
 
 			hideMapBoxTop();
 			hideMapBoxBottom();
@@ -355,7 +383,8 @@ advantages over the old one, let's stay with it for now.
 			message = document.webL10n.get(App.store.settings.name ? 'answer-right' : 'answer-right-country',
 				{country: question.name, tries: question.tries});
 			if (validated) {
-				validatedCounter += 1;
+				totalValidatedCounter++;
+				currentValidatedCounter++;
 				message += ' <span class="badge">';
 				message += '<span class="icon-checkmark"></span> ';
 				message += document.webL10n.get('validated');

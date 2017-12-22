@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
@@ -81,18 +81,18 @@
 			</header>
 			<section>
 				<div id="stats-bar">
-				<span>
-					<div class="title" data-l10n-id="best">Best</div>
-					<div id="overall-score-min"></div>
-				</span>
-				<span>
-					<div class="title" data-l10n-id="last">Last</div>
-					<div id="overall-score-last"></div>
-				</span>
-				<span>
-					<div class="title" data-l10n-id="average">Avg.</div>
-					<div id="overall-score-avg"></div>
-				</span>
+					<div>
+						<div class="title" data-l10n-id="best">Best</div>
+						<div id="overall-score-min"></div>
+					</div>
+					<div>
+						<div class="title" data-l10n-id="last">Last</div>
+						<div id="overall-score-last"></div>
+					</div>
+					<div>
+						<div class="title" data-l10n-id="average">Avg.</div>
+						<div id="overall-score-avg"></div>
+					</div>
 				</div>
 		
 				<div id="stats-bar-help">
@@ -147,12 +147,21 @@
 					<label><input type="checkbox" id="settings-name"><span data-l10n-id="settings-name">Show name of the country</span></label><br>
 					<label><input type="checkbox" id="settings-capital"><span data-l10n-id="settings-capital">Show capital</span></label><br>
 					<label><input type="checkbox" id="settings-flag"><span data-l10n-id="settings-flag">Show flag</span></label><br>
-					<label><input type="checkbox" id="settings-details"><span data-l10n-id="settings-details">Show region and population</span></label></span>
+					<label><input type="checkbox" id="settings-details"><span data-l10n-id="settings-details">Show region and population</span></label><br>
+					<select id="settings-group">
+					<option value="" data-l10n-id="settings-group-all">Show all countries</option>
+					<option value="un" data-l10n-id="settings-group-un">Show only UN members and Vatican</option>
+					<option value="Africa" data-l10n-id="settings-group-africa">Show only countries in Africa</option>
+					<option value="America" data-l10n-id="settings-group-america">Show only countries in America</option>
+					<option value="Asia" data-l10n-id="settings-group-asia">Show only countries in Asia</option>
+					<option value="Europe" data-l10n-id="settings-group-europe">Show only countries in Europe</option>
+					<option value="Oceania" data-l10n-id="settings-group-oceania">Show only countries in Oceania</option>
+					</select></span>
 				</p>
 
 				<h1 data-l10n-id="version">Version</h1>
 				<p>
-					<span>3.2</span>
+					<span>3.3</span>
 				</p>
 
 				<h1 data-l10n-id="license">License</h1>

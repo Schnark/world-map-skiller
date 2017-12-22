@@ -111,8 +111,9 @@
 	width: 100%;
 }
 
-#stats-bar span {
+#stats-bar > div {
 	position: relative;
+	display: inline;
 	flex: 1;
 	margin: 0 8px 0 0;
 	padding: 0;
@@ -124,11 +125,11 @@
 	color: #333;
 }
 
-#stats-bar span:last-of-type {
+#stats-bar > div:last-of-type {
 	margin: 0;
 }
 
-#stats-bar span .title {
+#stats-bar div .title {
 	background: #858585;
 	color: #fff;
 	font-size: 1rem;
@@ -144,7 +145,7 @@
 	background-color: #eee;
 }
 
-/* Checkboxes */
+/* Checkboxes, Select */
 [type="checkbox"] {
 	position: absolute;
 	overflow: hidden;
@@ -177,4 +178,12 @@
 
 [type="checkbox"]:focus + span::before {
 	outline: 1px dotted;
+}
+
+select {
+	background: inherit;
+	color: inherit;
+	font: inherit;
+	padding: 0.1em 0 0.1em 0.2em;
+	width: 100%;
 }

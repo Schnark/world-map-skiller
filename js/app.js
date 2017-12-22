@@ -51,6 +51,9 @@ var App = {
 
 	//Initialize and start app
 	start: function () {
+		document.documentElement.lang = document.webL10n.getLanguage();
+		document.documentElement.dir = document.webL10n.getDirection();
+
 		//about
 		$('#about-open').on('click', function () {
 			$('#about').attr('class', 'leftToCurrent');
@@ -75,12 +78,15 @@ var App = {
 			//KOS -> ?, PSX -> PSE, SAH -> ESH, SDS -> SSD
 		}
 		if (!App.store.settings) {
-			App.store.write('settings', {name: true, flag: true, capital: true, details: true});
+			App.store.write('settings', {name: true, flag: true, capital: true, details: true, group: ''});
 		} else if (typeof App.store.settings.flag === 'number') {
 			//translate old settings
 			App.store.settings.write('capital', true);
 			App.store.settings.write('name', App.store.settings.flag !== 2);
 			App.store.settings.write('flag', !!App.store.settings.flag);
+			App.store.settings.write('group', '');
+		} else if (!('group' in App.store.settings)) {
+			App.store.settings.write('group', '');
 		}
 
 		//init settings
@@ -88,17 +94,25 @@ var App = {
 		$('#settings-flag').prop('checked', App.store.settings.flag);
 		$('#settings-capital').prop('checked', App.store.settings.capital);
 		$('#settings-details').prop('checked', App.store.settings.details);
+		$('#settings-group').val(App.store.settings.group);
 		$('#settings-name').on('change', function () {
 			App.store.settings.write('name', $('#settings-name').prop('checked'));
+			document.documentElement.scrollTop = 0; //don't know why it sometimes jumps
 		});
 		$('#settings-flag').on('change', function () {
 			App.store.settings.write('flag', $('#settings-flag').prop('checked'));
+			document.documentElement.scrollTop = 0;
 		});
 		$('#settings-capital').on('change', function () {
 			App.store.settings.write('capital', $('#settings-capital').prop('checked'));
+			document.documentElement.scrollTop = 0;
 		});
 		$('#settings-details').on('change', function () {
 			App.store.settings.write('details', $('#settings-details').prop('checked'));
+			document.documentElement.scrollTop = 0;
+		});
+		$('#settings-group').on('change', function () {
+			App.store.settings.write('group', $('#settings-group').val());
 		});
 
 		//init map overlay: set line-height CSS property
