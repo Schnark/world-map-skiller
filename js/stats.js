@@ -74,7 +74,7 @@ App.Stats = function () {
 				info.continent,
 				'<br>',
 				info.population,
-				', ', //TODO l10n ?
+				document.webL10n.get('comma'),
 				document.webL10n.get('capital', {capital: info.capital}),
 				'</p>',
 				'</li>'

@@ -144,7 +144,7 @@ advantages over the old one, let's stay with it for now.
 		if (group === 'un') { //UN members + Vatican
 			return !(country.dependent || country.disputed);
 		}
-		return country.continent.replace(/.* /, '') === group;
+		return country.continent === group;
 	}
 
 	function flatten (array) {
@@ -327,9 +327,9 @@ advantages over the old one, let's stay with it for now.
 		}
 		message += '<br>';
 		if (App.store.settings.details) {
-			message += question.continent + ', ' + question.population;
+			message += question.continent + document.webL10n.get('comma') + question.population;
 			if (App.store.settings.capital && App.store.settings.name) {
-				message += ', ' + document.webL10n.get('capital', {capital: question.capital});
+				message += document.webL10n.get('comma') + document.webL10n.get('capital', {capital: question.capital});
 			}
 		} else if (App.store.settings.capital && App.store.settings.name) {
 			message += document.webL10n.get('capital', {capital: question.capital});
@@ -365,8 +365,8 @@ advantages over the old one, let's stay with it for now.
 		if (!started) {
 			message = App.formatFlag(info.flag);
 			message += '<p><b>' + info.name + '</b><br>';
-			message += info.continent + ', ' +
-				info.population + ', ' +
+			message += info.continent + document.webL10n.get('comma') +
+				info.population + document.webL10n.get('comma') +
 				document.webL10n.get('capital', {capital: info.capital});
 			message += '</p>';
 

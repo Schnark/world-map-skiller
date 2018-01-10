@@ -87,6 +87,8 @@ var App = {
 			App.store.settings.write('group', '');
 		} else if (!('group' in App.store.settings)) {
 			App.store.settings.write('group', '');
+		} else if (App.store.settings.group === 'America') {
+			App.store.settings.write('group', 'Americas');
 		}
 
 		//init settings
