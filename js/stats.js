@@ -63,13 +63,16 @@ App.Stats = function () {
 			var info = App.getCountryInfo(country.properties);
 
 			return [
-				'<li id="score-' + info.code + '"' + (info.dependent ? ' class="dependent"' : '') + '>',
+				'<li id="score-' + info.code + '" class="',
+					info.dependent ? 'dependent' : '',
+					info.disputed ? 'disputed' : '',
+					'">',
 				'<aside class="pack-start">',
 				App.formatFlag(info.flag),
 				'</aside>',
 				'<aside class="pack-end">',
 				'</aside>',
-				'<p>' + info.nameSimple + '</p>',
+				'<p class="name">' + info.nameSimple + '</p>',
 				'<p>',
 				info.continent,
 				'<br>',

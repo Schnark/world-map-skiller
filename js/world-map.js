@@ -67,6 +67,10 @@ App.WorldMap = function () {
 			resetMapView();
 		});
 
+		if (App.store.settings.colors) {
+			colors = randomize(colors);
+		}
+
 		//init map
 		$('#map')
 			.width(window.innerWidth)
@@ -126,6 +130,21 @@ advantages over the old one, let's stay with it for now.
 		).addTo(map);
 
 		resetMapView();
+	}
+
+	function randomize (array) {
+		var order = array.map(function (val) {
+			return {
+				val: val,
+				key: Math.random()
+			};
+		});
+		order.sort(function (a, b) {
+			return a.key - b.key;
+		});
+		return order.map(function (o) {
+			return o.val;
+		});
 	}
 
 	function formatIs (data) {
@@ -207,8 +226,22 @@ advantages over the old one, let's stay with it for now.
 		$mapBoxBottomContent.removeClass().empty();
 	}
 
-	function resetMapView () {
-		map.setView([48.48, 2.2], 1);
+	function resetMapView (continent) {
+		var center = {
+			Africa: [5, 15],
+			Americas: [30, -90],
+			Asia: [60, 90],
+			Europe: [60, 10],
+			Oceania: [0, 175]
+		}[continent] || [48.48, 2.2],
+		zoom = {
+			Africa: 3,
+			Americas: 2,
+			Asia: 2,
+			Europe: 3,
+			Oceania: 2
+		}[continent] || 1;
+		map.setView(center, zoom);
 	}
 
 	function endOfPile () {
@@ -296,14 +329,15 @@ advantages over the old one, let's stay with it for now.
 	function drawQuestion () {
 		var rnd, index, country, message = '';
 
-		resetMapView();
-
 		if (endOfMission()) {
+			resetMapView();
 			return;
 		}
 		if (endOfPile()) {
+			resetMapView();
 			return;
 		}
+		resetMapView(App.store.settings.group);
 
 		rnd = Math.floor(Math.random() * drawPile.length);
 		index = drawPile.splice(rnd, 1);

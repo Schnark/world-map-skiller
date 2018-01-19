@@ -74,21 +74,47 @@ var App = {
 			App.store.stats.erase('FLK');
 			App.store.stats.erase('CYN');
 			App.store.stats.erase('SOL');
-			//TODO rename gu_a3 to ISO codes
-			//KOS -> ?, PSX -> PSE, SAH -> ESH, SDS -> SSD
+			//rename gu_a3 to ISO codes
+			if ('PSX' in App.store.stats) {
+				App.store.stats.write('PSE', App.store.stats.PSX);
+				App.store.stats.erase('PSX');
+			}
+			if ('SAH' in App.store.stats) {
+				App.store.stats.write('ESH', App.store.stats.SAH);
+				App.store.stats.erase('SAH');
+			}
+			if ('SDS' in App.store.stats) {
+				App.store.stats.write('SSD', App.store.stats.SDS);
+				App.store.stats.erase('SDS');
+			}
+			//TODO if Kosovo gets an ISO code different from KOS, rename too
+			//and rename gu_a3 to iso_a3
 		}
 		if (!App.store.settings) {
-			App.store.write('settings', {name: true, flag: true, capital: true, details: true, group: ''});
-		} else if (typeof App.store.settings.flag === 'number') {
+			App.store.write('settings', {
+				name: true,
+				flag: true,
+				capital: true,
+				details: true,
+				group: '',
+				colors: false
+			});
+		} else {
 			//translate old settings
-			App.store.settings.write('capital', true);
-			App.store.settings.write('name', App.store.settings.flag !== 2);
-			App.store.settings.write('flag', !!App.store.settings.flag);
-			App.store.settings.write('group', '');
-		} else if (!('group' in App.store.settings)) {
-			App.store.settings.write('group', '');
-		} else if (App.store.settings.group === 'America') {
-			App.store.settings.write('group', 'Americas');
+			if (typeof App.store.settings.flag === 'number') {
+				App.store.settings.write('capital', true);
+				App.store.settings.write('name', App.store.settings.flag !== 2);
+				App.store.settings.write('flag', !!App.store.settings.flag);
+			}
+			if (!('group' in App.store.settings)) {
+				App.store.settings.write('group', '');
+			}
+			if (App.store.settings.group === 'America') {
+				App.store.settings.write('group', 'Americas');
+			}
+			if (!('colors' in App.store.settings)) {
+				App.store.settings.write('colors', false);
+			}
 		}
 
 		//init settings
@@ -97,6 +123,7 @@ var App = {
 		$('#settings-capital').prop('checked', App.store.settings.capital);
 		$('#settings-details').prop('checked', App.store.settings.details);
 		$('#settings-group').val(App.store.settings.group);
+		$('#settings-colors').prop('checked', App.store.settings.colors);
 		$('#settings-name').on('change', function () {
 			App.store.settings.write('name', $('#settings-name').prop('checked'));
 			document.documentElement.scrollTop = 0; //don't know why it sometimes jumps
@@ -115,6 +142,10 @@ var App = {
 		});
 		$('#settings-group').on('change', function () {
 			App.store.settings.write('group', $('#settings-group').val());
+		});
+		$('#settings-colors').on('change', function () {
+			App.store.settings.write('colors', $('#settings-colors').prop('checked'));
+			document.documentElement.scrollTop = 0;
 		});
 
 		//init map overlay: set line-height CSS property
@@ -180,7 +211,8 @@ var App = {
 				document.webL10n.get('nb-people', {population: App.formatNumber(properties.pop_est)}),
 			capital: document.webL10n.get(properties.gu_a3 + '-capital'),
 			flag: properties.iso_a2.toLowerCase(),
-			dependent: !!properties.dependent
+			dependent: !!properties.dependent,
+			disputed: properties.disputed
 		};
 	},
 

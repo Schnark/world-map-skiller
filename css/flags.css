@@ -83,7 +83,7 @@ https://github.com/lafeber/world-flags-sprite
 .f32 .fo{background-position: -160px -256px;}
 .f32 .fj{background-position: -192px -256px;}
 .f32 .fi{background-position: -224px -256px;}
-.f32 .fr,.f32 .cp{background-position: -256px -256px;}
+.f32 .fr,.f32 .cp,.f32 .mf{background-position: -256px -256px;}
 .f32 .pf{background-position: -288px 0px;}
 .f32 .tf{background-position: -288px -32px;}
 .f32 .ga{background-position: -288px -64px;}
@@ -200,7 +200,7 @@ https://github.com/lafeber/world-flags-sprite
 .f32 .sh{background-position: -384px -416px;}
 .f32 .kn{background-position: -416px -416px;}
 .f32 .lc{background-position: -448px 0px;}
-.f32 .mf{background-position: -448px -32px;}
+.f32 .x-mf{background-position: -448px -32px;}
 .f32 .vc{background-position: -448px -64px;}
 .f32 .ws{background-position: -448px -96px;}
 .f32 .sm{background-position: -448px -128px;}
