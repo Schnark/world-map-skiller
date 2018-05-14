@@ -2,7 +2,7 @@
 (function (worker) {
 "use strict";
 
-var VERSION = 'v3.6',
+var VERSION = 'v3.7',
 	FILES = [
 		'index.html',
 		'css/back.png',
