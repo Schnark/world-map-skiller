@@ -1,8 +1,8 @@
 {
 	"name": "World Map Skiller",
 	"description": "Geography app to learn world countries in a fun way.",
-	"version": "3.7",
-	"size": 577742,
+	"version": "3.8",
+	"size": 577776,
 	"package_path": "https://schnark.github.io/world-map-skiller/world-map-skiller.zip",
 	"icons": {
 		"48": "/img/WorldMapSkiller-icon-48.png",
@@ -10,7 +10,7 @@
 		"128": "/img/WorldMapSkiller-icon-128.png"
 	},
 	"developer": {
-		"name": "Michael M., based on an app by Valéry Febvre",
+		"name": "Michael Müller, based on an app by Valéry Febvre",
 		"url": "https://github.com/Schnark"
 	},
 	"default_locale": "en-US",

@@ -4,7 +4,7 @@
  * originally written by Valéry Febvre
  * vfebvre@aester-eggs.com
  *
- * Copyright 2015 Valéry Febvre, 2017 Michael M.
+ * Copyright 2015 Valéry Febvre, 2017 Michael Müller
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
