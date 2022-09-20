@@ -1,8 +1,8 @@
 {
 	"name": "World Map Skiller",
 	"description": "Geography app to learn world countries in a fun way.",
-	"version": "3.9",
-	"size": 577801,
+	"version": "3.10",
+	"size": 577762,
 	"package_path": "https://schnark.github.io/world-map-skiller/world-map-skiller.zip",
 	"icons": {
 		"48": "/img/WorldMapSkiller-icon-48.png",

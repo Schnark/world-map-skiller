@@ -3,7 +3,7 @@
 "use strict";
 
 var PREFIX = 'world-map-skiller',
-	VERSION = '3.9',
+	VERSION = '3.10',
 	FILES = [
 		'index.html',
 		'css/back.png',
