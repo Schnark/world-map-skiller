@@ -3,7 +3,7 @@
 "use strict";
 
 var PREFIX = 'world-map-skiller',
-	VERSION = '3.10',
+	VERSION = '3.11',
 	FILES = [
 		'index.html',
 		'css/back.png',
@@ -25,7 +25,8 @@ var PREFIX = 'world-map-skiller',
 		'lib/leaflet-0.7.3/leaflet.js',
 		'locales/locales.ini',
 		'locales/worldmapskiller.de.properties',
-		'locales/worldmapskiller.en-US.properties',
+		'locales/worldmapskiller.en.properties',
+		'locales/worldmapskiller.en-x-root.properties',
 		'locales/worldmapskiller.fr.properties'
 	];
 

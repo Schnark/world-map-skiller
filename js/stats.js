@@ -89,12 +89,14 @@ App.Stats = function () {
 		if (App.store.stats[code]) {
 			App.store.stats[code].push(score);
 		} else {
-			App.store.stats.write(code, [score]);
+			App.store.stats[code] = [score];
 		}
+		App.storePersistent();
 	}
 
 	function clear () {
-		App.store.write('stats', {});
+		App.store.stats = {};
+		App.storePersistent();
 
 		$('#overall-score-avg').html(document.webL10n.get('no-value'));
 		$('#overall-score-min').html(document.webL10n.get('no-value'));

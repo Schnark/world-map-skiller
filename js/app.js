@@ -49,6 +49,74 @@ var App = {
 		'zoomInDown'
 	],
 
+	getRhaboo: function () {
+		var store = Rhaboo.persistent(App.name),
+			defaultSettings = {
+				name: true,
+				flag: true,
+				capital: true,
+				details: true,
+				group: '',
+				colors: false
+			}, rhaboo;
+		if (!store.stats && !store.settings) {
+			return {stats: {}, settings: defaultSettings};
+		}
+		store = JSON.parse(JSON.stringify(store)); //remove Rhaboo structure
+		//remove storage (a few remaining items are deleted below)
+		rhaboo = Rhaboo.persistent(App.name);
+		rhaboo.erase('stats');
+		rhaboo.erase('settings');
+		if (!store.stats) {
+			store.stats = {};
+		} else {
+			//remove countries that have been deleted
+			delete store.stats.ATF;
+			delete store.stats.FLK;
+			delete store.stats.CYN;
+			delete store.stats.SOL;
+			//rename gu_a3 to ISO codes
+			if ('PSX' in store.stats) {
+				store.stats.PSE = store.stats.PSX;
+				delete store.stats.PSX;
+			}
+			if ('SAH' in store.stats) {
+				store.stats.ESH = store.stats.SAH;
+				delete store.stats.SAH;
+			}
+			if ('SDS' in store.stats) {
+				store.stats.SSD = store.stats.SDS;
+				delete store.stats.SDS;
+			}
+		}
+		if (!store.settings) {
+			store.settings = defaultSettings;
+		} else {
+			//translate old settings
+			if (typeof store.settings.flag === 'number') {
+				store.settings.capital = true;
+				store.settings.name = store.settings.flag !== 2;
+				store.settings.flag = !!store.settings.flag;
+			}
+			if (!('group' in store.settings)) {
+				store.settings.group = '';
+			}
+			if (store.settings.group === 'America') {
+				store.settings.group = 'Americas';
+			}
+			if (!('colors' in store.settings)) {
+				store.settings.colors = false;
+			}
+		}
+		return store;
+	},
+	storePersistent: function () {
+		try {
+			localStorage.setItem('world-map-skiller-persistent', JSON.stringify(App.store));
+		} catch (e) {
+		}
+	},
+
 	//Initialize and start app
 	start: function () {
 		document.documentElement.lang = document.webL10n.getLanguage();
@@ -65,55 +133,27 @@ var App = {
 		});
 
 		//init localStorage
-		App.store = Rhaboo.persistent(App.name);
-		if (!App.store.stats) {
-			App.store.write('stats', {});
-		} else {
-			//remove countries that have been deleted
-			App.store.stats.erase('ATF');
-			App.store.stats.erase('FLK');
-			App.store.stats.erase('CYN');
-			App.store.stats.erase('SOL');
-			//rename gu_a3 to ISO codes
-			if ('PSX' in App.store.stats) {
-				App.store.stats.write('PSE', App.store.stats.PSX);
-				App.store.stats.erase('PSX');
-			}
-			if ('SAH' in App.store.stats) {
-				App.store.stats.write('ESH', App.store.stats.SAH);
-				App.store.stats.erase('SAH');
-			}
-			if ('SDS' in App.store.stats) {
-				App.store.stats.write('SSD', App.store.stats.SDS);
-				App.store.stats.erase('SDS');
-			}
-			//TODO if Kosovo gets an ISO code different from KOS, rename too
+		try {
+			App.store = JSON.parse(localStorage.getItem('world-map-skiller-persistent') || 'x');
+			//if Kosovo gets an ISO code different from KOS, rename it here
 			//and rename gu_a3 to iso_a3
+		} catch (e) {
+			//TODO remove rhaboo, init with default here
+			App.store = App.getRhaboo();
+			App.storePersistent();
 		}
-		if (!App.store.settings) {
-			App.store.write('settings', {
-				name: true,
-				flag: true,
-				capital: true,
-				details: true,
-				group: '',
-				colors: false
-			});
-		} else {
-			//translate old settings
-			if (typeof App.store.settings.flag === 'number') {
-				App.store.settings.write('capital', true);
-				App.store.settings.write('name', App.store.settings.flag !== 2);
-				App.store.settings.write('flag', !!App.store.settings.flag);
+		//TODO remove the following code once rhaboo has been removed long enough
+		var i, key, keys = [];
+		for (i = 0; i < localStorage.length; i++) {
+			key = localStorage.key(i);
+			if (key.toLowerCase().slice(0, 7) === '_rhaboo') {
+				keys.push(key);
 			}
-			if (!('group' in App.store.settings)) {
-				App.store.settings.write('group', '');
-			}
-			if (App.store.settings.group === 'America') {
-				App.store.settings.write('group', 'Americas');
-			}
-			if (!('colors' in App.store.settings)) {
-				App.store.settings.write('colors', false);
+		}
+		for (i = 0; i < keys.length; i++) {
+			try {
+				localStorage.removeItem(keys[i]);
+			} catch (e) {
 			}
 		}
 
@@ -125,26 +165,32 @@ var App = {
 		$('#settings-group').val(App.store.settings.group);
 		$('#settings-colors').prop('checked', App.store.settings.colors);
 		$('#settings-name').on('change', function () {
-			App.store.settings.write('name', $('#settings-name').prop('checked'));
+			App.store.settings.name = $('#settings-name').prop('checked');
+			App.storePersistent();
 			document.documentElement.scrollTop = 0; //don't know why it sometimes jumps
 		});
 		$('#settings-flag').on('change', function () {
-			App.store.settings.write('flag', $('#settings-flag').prop('checked'));
+			App.store.settings.flag = $('#settings-flag').prop('checked');
+			App.storePersistent();
 			document.documentElement.scrollTop = 0;
 		});
 		$('#settings-capital').on('change', function () {
-			App.store.settings.write('capital', $('#settings-capital').prop('checked'));
+			App.store.settings.capital = $('#settings-capital').prop('checked');
+			App.storePersistent();
 			document.documentElement.scrollTop = 0;
 		});
 		$('#settings-details').on('change', function () {
-			App.store.settings.write('details', $('#settings-details').prop('checked'));
+			App.store.settings.details = $('#settings-details').prop('checked');
+			App.storePersistent();
 			document.documentElement.scrollTop = 0;
 		});
 		$('#settings-group').on('change', function () {
-			App.store.settings.write('group', $('#settings-group').val());
+			App.store.settings.group = $('#settings-group').val();
+			App.storePersistent();
 		});
 		$('#settings-colors').on('change', function () {
-			App.store.settings.write('colors', $('#settings-colors').prop('checked'));
+			App.store.settings.colors = $('#settings-colors').prop('checked');
+			App.storePersistent();
 			document.documentElement.scrollTop = 0;
 		});
 
