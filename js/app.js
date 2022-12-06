@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*global App: true, $, Rhaboo*/
+/*global App: true, $*/
 /*jshint camelcase: false*/
 //jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 
@@ -29,7 +29,6 @@ App =
 "use strict";
 
 var App = {
-	name: 'WorldMapSkiller',
 	countries: null,
 	store: null,
 
@@ -49,66 +48,43 @@ var App = {
 		'zoomInDown'
 	],
 
-	getRhaboo: function () {
-		var store = Rhaboo.persistent(App.name),
-			defaultSettings = {
-				name: true,
-				flag: true,
-				capital: true,
-				details: true,
-				group: '',
-				colors: false
-			}, rhaboo;
-		if (!store.stats && !store.settings) {
-			return {stats: {}, settings: defaultSettings};
+	initPersistent: function () {
+		try {
+			App.store = JSON.parse(localStorage.getItem('world-map-skiller-persistent') || 'x');
+			//if Kosovo gets an ISO code different from KOS, rename it here:
+			/*if (App.store.stats.KOS) {
+				App.store.stats.XXX = App.store.stats.KOS;
+				delete App.store.stats.KOS;
+			}*/
+			//and rename gu_a3 to iso_a3
+		} catch (e) {
+			App.store = {
+				stats: {},
+				settings: {
+					name: true,
+					flag: true,
+					capital: true,
+					details: true,
+					group: '',
+					colors: false
+				}
+			};
+			App.storePersistent();
 		}
-		store = JSON.parse(JSON.stringify(store)); //remove Rhaboo structure
-		//remove storage (a few remaining items are deleted below)
-		rhaboo = Rhaboo.persistent(App.name);
-		rhaboo.erase('stats');
-		rhaboo.erase('settings');
-		if (!store.stats) {
-			store.stats = {};
-		} else {
-			//remove countries that have been deleted
-			delete store.stats.ATF;
-			delete store.stats.FLK;
-			delete store.stats.CYN;
-			delete store.stats.SOL;
-			//rename gu_a3 to ISO codes
-			if ('PSX' in store.stats) {
-				store.stats.PSE = store.stats.PSX;
-				delete store.stats.PSX;
-			}
-			if ('SAH' in store.stats) {
-				store.stats.ESH = store.stats.SAH;
-				delete store.stats.SAH;
-			}
-			if ('SDS' in store.stats) {
-				store.stats.SSD = store.stats.SDS;
-				delete store.stats.SDS;
+		//TODO remove the following code once rhaboo has been removed long enough
+		var i, key, keys = [];
+		for (i = 0; i < localStorage.length; i++) {
+			key = localStorage.key(i);
+			if (key.toLowerCase().slice(0, 7) === '_rhaboo') {
+				keys.push(key);
 			}
 		}
-		if (!store.settings) {
-			store.settings = defaultSettings;
-		} else {
-			//translate old settings
-			if (typeof store.settings.flag === 'number') {
-				store.settings.capital = true;
-				store.settings.name = store.settings.flag !== 2;
-				store.settings.flag = !!store.settings.flag;
-			}
-			if (!('group' in store.settings)) {
-				store.settings.group = '';
-			}
-			if (store.settings.group === 'America') {
-				store.settings.group = 'Americas';
-			}
-			if (!('colors' in store.settings)) {
-				store.settings.colors = false;
+		for (i = 0; i < keys.length; i++) {
+			try {
+				localStorage.removeItem(keys[i]);
+			} catch (e) {
 			}
 		}
-		return store;
 	},
 	storePersistent: function () {
 		try {
@@ -133,29 +109,7 @@ var App = {
 		});
 
 		//init localStorage
-		try {
-			App.store = JSON.parse(localStorage.getItem('world-map-skiller-persistent') || 'x');
-			//if Kosovo gets an ISO code different from KOS, rename it here
-			//and rename gu_a3 to iso_a3
-		} catch (e) {
-			//TODO remove rhaboo, init with default here
-			App.store = App.getRhaboo();
-			App.storePersistent();
-		}
-		//TODO remove the following code once rhaboo has been removed long enough
-		var i, key, keys = [];
-		for (i = 0; i < localStorage.length; i++) {
-			key = localStorage.key(i);
-			if (key.toLowerCase().slice(0, 7) === '_rhaboo') {
-				keys.push(key);
-			}
-		}
-		for (i = 0; i < keys.length; i++) {
-			try {
-				localStorage.removeItem(keys[i]);
-			} catch (e) {
-			}
-		}
+		App.initPersistent();
 
 		//init settings
 		$('#settings-name').prop('checked', App.store.settings.name);

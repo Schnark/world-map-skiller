@@ -3,7 +3,7 @@
 "use strict";
 
 var PREFIX = 'world-map-skiller',
-	VERSION = '3.11',
+	VERSION = '3.12',
 	FILES = [
 		'index.html',
 		'css/back.png',
@@ -20,7 +20,6 @@ var PREFIX = 'world-map-skiller',
 		'lib/animate.css',
 		'lib/jquery-3.2.1.slim.min.js',
 		'lib/l10n.js',
-		'lib/rhaboo.min.js',
 		'lib/leaflet-0.7.3/leaflet.css',
 		'lib/leaflet-0.7.3/leaflet.js',
 		'locales/locales.ini',

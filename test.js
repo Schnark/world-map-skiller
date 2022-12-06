@@ -1,6 +1,9 @@
 (function () {
 "use strict";
 
+/*jshint camelcase: false*/
+//jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+
 function getData (callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', 'data/geo.json');
