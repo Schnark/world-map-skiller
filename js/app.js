@@ -71,20 +71,6 @@ var App = {
 			};
 			App.storePersistent();
 		}
-		//TODO remove the following code once rhaboo has been removed long enough
-		var i, key, keys = [];
-		for (i = 0; i < localStorage.length; i++) {
-			key = localStorage.key(i);
-			if (key.toLowerCase().slice(0, 7) === '_rhaboo') {
-				keys.push(key);
-			}
-		}
-		for (i = 0; i < keys.length; i++) {
-			try {
-				localStorage.removeItem(keys[i]);
-			} catch (e) {
-			}
-		}
 	},
 	storePersistent: function () {
 		try {
